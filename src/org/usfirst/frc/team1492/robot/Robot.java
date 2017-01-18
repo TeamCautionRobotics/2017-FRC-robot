@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1492.robot;
 
+import org.usfirst.frc.team1492.robot.Gamepad.Axis;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -11,12 +14,23 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Robot extends IterativeRobot {
 
+    DriveBase driveBase;
+    
+    Gamepad driver;
+    Gamepad manipulator;
+    
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
+	    
+	    driveBase = new DriveBase(0, 1);
+	    
+	    driver = new Gamepad(0);
+	    manipulator = new Gamepad(1);
+	    
 	}
 
 	/**
@@ -38,8 +52,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
 	}
-
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
