@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
+import org.usfirst.frc.team1492.robot.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -19,6 +20,9 @@ public class Robot extends IterativeRobot {
     Gamepad driver;
     Gamepad manipulator;
     
+    boolean shiftButtonPressed = false;
+    boolean driveHighGear = true;
+    
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -26,7 +30,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 	    
-	    driveBase = new DriveBase(0, 1);
+	    driveBase = new DriveBase(0, 1, 0);
+	    driveBase.shiftHighGear(true);
 	    
 	    driver = new Gamepad(0);
 	    manipulator = new Gamepad(1);
@@ -53,6 +58,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
+	    
+	    boolean shiftButton = driver.getButton(Button.A);
+	    if (shiftButton != shiftButtonPressed) {
+            driveHighGear = !driveHighGear;
+            shiftButtonPressed = shiftButton;
+            driveBase.shiftHighGear(driveHighGear);
+        }
 	}
 	
 	/**
