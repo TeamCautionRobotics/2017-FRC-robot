@@ -5,22 +5,28 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class DriveBase {
 
-    VictorSP driveLeft;
-    VictorSP driveRight;
+    VictorSP driveLeftA;
+    VictorSP driveLeftB;
+    VictorSP driveRightA;
+    VictorSP driveRightB;
     Solenoid shifter;
     
-    public DriveBase(int left, int right, int shifterChannel) {
+    public DriveBase(int leftA, int leftB, int rightA, int rightB, int shifterChannel) {
         
-        driveLeft = new VictorSP(left);
-        driveRight = new VictorSP(right);
+        driveLeftA = new VictorSP(leftA);
+        driveLeftB = new VictorSP(leftB);
+        driveRightA = new VictorSP(rightA);
+        driveRightB = new VictorSP(rightB);
         shifter = new Solenoid(shifterChannel);
         
     }
     
     public void drive(double left, double right){
         
-        driveLeft.set(left);
-        driveRight.set(right);
+        driveLeftA.set(-left);
+        driveLeftB.set(-left);
+        driveRightA.set(right);
+        driveRightB.set(right);
         
     }
 
