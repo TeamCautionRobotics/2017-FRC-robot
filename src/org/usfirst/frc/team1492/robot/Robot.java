@@ -29,12 +29,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-	    
 	    driveBase = new DriveBase(0, 1, 2, 3, 0);
 	    driveBase.shiftHighGear(true);
 	    
 	    driver = new Gamepad(0);
-	    
 	}
 
 	/**

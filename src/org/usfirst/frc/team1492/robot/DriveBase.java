@@ -12,28 +12,22 @@ public class DriveBase {
     Solenoid shifter;
     
     public DriveBase(int leftA, int leftB, int rightA, int rightB, int shifterChannel) {
-        
         driveLeftA = new VictorSP(leftA);
         driveLeftB = new VictorSP(leftB);
         driveRightA = new VictorSP(rightA);
         driveRightB = new VictorSP(rightB);
         shifter = new Solenoid(shifterChannel);
-        
     }
     
     public void drive(double left, double right){
-        
         driveLeftA.set(-left);
         driveLeftB.set(-left);
         driveRightA.set(right);
         driveRightB.set(right);
-        
     }
 
     public void drive(double speed){
-        
         drive(speed, speed);
-        
     }
     
     public void shiftHighGear(boolean highGear) {
