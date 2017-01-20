@@ -34,7 +34,6 @@ public class Robot extends IterativeRobot {
 	    driveBase.shiftHighGear(true);
 	    
 	    driver = new Gamepad(0);
-	    manipulator = new Gamepad(1);
 	    
 	}
 
