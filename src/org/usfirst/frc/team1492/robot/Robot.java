@@ -61,9 +61,11 @@ public class Robot extends IterativeRobot {
 	    
 	    boolean shiftButton = driver.getButton(Button.A);
 	    if (shiftButton != shiftButtonPressed) {
-            driveHighGear = !driveHighGear;
             shiftButtonPressed = shiftButton;
-            driveBase.shiftHighGear(driveHighGear);
+            if (shiftButton) {
+                driveHighGear = !driveHighGear;
+                driveBase.shiftHighGear(driveHighGear);
+            }
         }
 	}
 	
