@@ -56,14 +56,14 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
 	    
-	    boolean shiftButton = driver.getButton(Button.A);
-	    if (shiftButton != shiftButtonPressed) {
-            shiftButtonPressed = shiftButton;
-            if (shiftButton) {
-                driveHighGear = !driveHighGear;
-                driveBase.shiftHighGear(driveHighGear);
-            }
+	    if (driver.getButton(Button.LEFT_BUMPER)) {
+	        driveHighGear = false;
+	    }
+	    if (driver.getButton(Button.RIGHT_BUMPER)) {
+            driveHighGear = true;
         }
+
+        driveBase.useHighGear(driveHighGear);
 	}
 	
 	/**
