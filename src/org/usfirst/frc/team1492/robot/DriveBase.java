@@ -30,7 +30,7 @@ public class DriveBase {
         drive(speed, speed);
     }
     
-    public void shiftHighGear(boolean highGear) {
-        shifter.set(highGear);
+    public void useHighGear(boolean highGear) {
+        shifter.set(!highGear);
     }
 }

@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
     Gamepad manipulator;
     
     boolean shiftButtonPressed = false;
-    boolean driveHighGear = true;
+    boolean driveHighGear = false;
     
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 	    driveBase = new DriveBase(0, 1, 2, 3, 0);
-	    driveBase.shiftHighGear(true);
+	    driveBase.useHighGear(false);
 	    
 	    driver = new Gamepad(0);
 	}
@@ -49,6 +49,12 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 	}
 
+	@Override
+	public void teleopInit() {
+	    driveHighGear = false;
+	    driveBase.useHighGear(false);
+	}
+
 	/**
 	 * This function is called periodically during operator control
 	 */
@@ -56,14 +62,14 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
 	    
-	    boolean shiftButton = driver.getButton(Button.A);
-	    if (shiftButton != shiftButtonPressed) {
-            shiftButtonPressed = shiftButton;
-            if (shiftButton) {
-                driveHighGear = !driveHighGear;
-                driveBase.shiftHighGear(driveHighGear);
-            }
+	    if (driver.getButton(Button.LEFT_BUMPER)) {
+	        driveHighGear = false;
+	    }
+	    if (driver.getButton(Button.RIGHT_BUMPER)) {
+            driveHighGear = true;
         }
+
+        driveBase.useHighGear(driveHighGear);
 	}
 	
 	/**
