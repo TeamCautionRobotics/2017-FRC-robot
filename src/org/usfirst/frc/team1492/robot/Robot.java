@@ -4,6 +4,7 @@ import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 
 
 /**
@@ -29,7 +30,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-	    driveBase = new DriveBase(0, 1, 2, 3, 0);
+	    driveBase = new DriveBase(VictorSP.class, 0, 1, 2, 3, 0);
 	    driveBase.useHighGear(false);
 	    
 	    driver = new Gamepad(0);
