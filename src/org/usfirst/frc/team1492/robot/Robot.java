@@ -106,7 +106,7 @@ public class Robot extends IterativeRobot {
         	gearPistonButtonPressed = gearPistonButton;
             if (gearPistonButton) {
                 gearPistonActivated = !gearPistonActivated;
-                GearPiston.latchGear(gearPistonActivated);
+                gearPiston.latchGear(gearPistonActivated);
             }
         }
         
