@@ -2,7 +2,9 @@ package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
+import org.usfirst.frc.team1492.robot.Winch.WinchDirections;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -21,9 +23,17 @@ public class Robot extends IterativeRobot {
     Gamepad driver;
     Gamepad manipulator;
     
+    GearPiston gearPiston;
+    
+    Winch winch;
+	DigitalInput winchKill;
+    
     boolean shiftButtonPressed = false;
     boolean driveHighGear = false;
     
+    boolean gearPistonButtonPressed = false;
+    boolean gearPistonActivated = false;
+        
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -33,6 +43,13 @@ public class Robot extends IterativeRobot {
 	    driveBase = new DriveBase(VictorSP.class, 0, 1, 2, 3, 0);
 	    driveBase.useHighGear(false);
 	    
+	    //I do not know the channel for gear piston
+	    gearPiston = new GearPiston(0);
+	    
+	    //I do not know the channel for limit switch
+	    winch = new Winch(4);
+	    winchKill = new DigitalInput(0);
+
 	    driver = new Gamepad(0);
 	}
 
@@ -61,6 +78,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
 	    
 	    if (driver.getButton(Button.LEFT_BUMPER)) {
@@ -71,6 +89,31 @@ public class Robot extends IterativeRobot {
         }
 
         driveBase.useHighGear(driveHighGear);
+
+	    
+	    boolean winchButtonOut = driver.getButton(Button.B);
+	    boolean winchButtonIn = driver.getButton(Button.X);
+	    if (winchButtonOut) {
+	        winch.moveWinch(WinchDirections.UP);
+	    } else if (winchButtonIn) {
+	    	winch.moveWinch(WinchDirections.DOWN);
+	    } else {
+	    	winch.moveWinch(WinchDirections.STOP);
+	    }
+	
+	    boolean gearPistonButton = driver.getButton(Button.Y);
+        if (gearPistonButton != gearPistonButtonPressed) {
+        	gearPistonButtonPressed = gearPistonButton;
+            if (gearPistonButton) {
+                gearPistonActivated = !gearPistonActivated;
+                GearPiston.latchGear(gearPistonActivated);
+            }
+        }
+        
+        if (winchKill.get()) {
+			winch.moveWinch(WinchDirections.STOP);
+		}
+
 	}
 	
 	/**
