@@ -1,21 +1,30 @@
 package org.usfirst.frc.team1492.robot;
 
+import java.lang.reflect.Constructor;
+
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.SpeedController;
 
 public class DriveBase {
 
-    VictorSP driveLeftA;
-    VictorSP driveLeftB;
-    VictorSP driveRightA;
-    VictorSP driveRightB;
+    SpeedController driveLeftA;
+    SpeedController driveLeftB;
+    SpeedController driveRightA;
+    SpeedController driveRightB;
     Solenoid shifter;
-    
-    public DriveBase(int leftA, int leftB, int rightA, int rightB, int shifterChannel) {
-        driveLeftA = new VictorSP(leftA);
-        driveLeftB = new VictorSP(leftB);
-        driveRightA = new VictorSP(rightA);
-        driveRightB = new VictorSP(rightB);
+
+    public DriveBase(Class<? extends SpeedController> controller, int leftA, int leftB,
+            int rightA, int rightB, int shifterChannel) {
+        try {
+            Constructor<? extends SpeedController> constructor = controller.getConstructor(int.class);
+            driveLeftA = constructor.newInstance(leftA);
+            driveLeftB = constructor.newInstance(leftB);
+            driveRightA = constructor.newInstance(rightA);
+            driveRightB = constructor.newInstance(rightB);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         shifter = new Solenoid(shifterChannel);
     }
     
@@ -30,7 +39,7 @@ public class DriveBase {
         drive(speed, speed);
     }
     
-    public void shiftHighGear(boolean highGear) {
-        shifter.set(highGear);
+    public void useHighGear(boolean highGear) {
+        shifter.set(!highGear);
     }
 }

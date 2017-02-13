@@ -6,6 +6,7 @@ import org.usfirst.frc.team1492.robot.Winch.WinchDirections;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 
 
 /**
@@ -28,7 +29,7 @@ public class Robot extends IterativeRobot {
 	DigitalInput winchKill;
     
     boolean shiftButtonPressed = false;
-    boolean driveHighGear = true;
+    boolean driveHighGear = false;
     
     boolean gearPistonButtonPressed = false;
     boolean gearPistonActivated = false;
@@ -39,8 +40,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-	    driveBase = new DriveBase(0, 1, 2, 3, 0);
-	    driveBase.shiftHighGear(true);
+	    driveBase = new DriveBase(VictorSP.class, 0, 1, 2, 3, 0);
+	    driveBase.useHighGear(false);
 	    
 	    //I do not know the channel for gear piston
 	    gearPiston = new GearPiston(0);
@@ -66,6 +67,12 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 	}
 
+	@Override
+	public void teleopInit() {
+	    driveHighGear = false;
+	    driveBase.useHighGear(false);
+	}
+
 	/**
 	 * This function is called periodically during operator control
 	 */
@@ -74,14 +81,15 @@ public class Robot extends IterativeRobot {
 		
 	    driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
 	    
-	    boolean shiftButton = driver.getButton(Button.A);
-	    if (shiftButton != shiftButtonPressed) {
-            shiftButtonPressed = shiftButton;
-            if (shiftButton) {
-                driveHighGear = !driveHighGear;
-                driveBase.shiftHighGear(driveHighGear);
-            }
+	    if (driver.getButton(Button.LEFT_BUMPER)) {
+	        driveHighGear = false;
+	    }
+	    if (driver.getButton(Button.RIGHT_BUMPER)) {
+            driveHighGear = true;
         }
+
+        driveBase.useHighGear(driveHighGear);
+
 	    
 	    boolean winchButtonOut = driver.getButton(Button.B);
 	    boolean winchButtonIn = driver.getButton(Button.X);
@@ -105,6 +113,7 @@ public class Robot extends IterativeRobot {
         if (winchKill.get()) {
 			winch.moveWinch(WinchDirections.STOP);
 		}
+
 	}
 	
 	/**
