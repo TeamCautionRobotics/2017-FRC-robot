@@ -13,15 +13,15 @@ public class Gamepad extends Joystick {
         super(port);
         this.deadbandSize = deadband;
     }
-    
+
     double getAxis(Axis axis) {
         return deadband(getRawAxis(axis.ordinal()));
     }
-    
+
     boolean getButton(Button button) {
         return getRawButton(button.ordinal() + 1);
     }
-    
+
     private double deadband(double value) {
         if (value > deadbandSize) {
             return (value - deadbandSize) / (1 - deadbandSize);
