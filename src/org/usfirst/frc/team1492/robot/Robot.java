@@ -59,7 +59,9 @@ public class Robot extends IterativeRobot {
      * This function is called once at the beginning of autonomous.
      */
     @Override
-    public void autonomousInit() {}
+    public void autonomousInit() {
+    	driveBase.resetGyro();
+    }
 
     /**
      * This function is called periodically during autonomous
