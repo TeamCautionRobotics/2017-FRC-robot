@@ -25,11 +25,7 @@ public class Robot extends IterativeRobot {
 
     Doors doors;
 
-    boolean shiftButtonPressed = false;
     boolean driveHighGear = false;
-
-    boolean gearPistonButtonPressed = false;
-    boolean gearPistonActivated = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -90,14 +86,7 @@ public class Robot extends IterativeRobot {
 
         winch.moveWinch(manipulator.getButton(Button.X));
 
-        boolean gearPistonButton = manipulator.getButton(Button.RIGHT_BUMPER);
-        if (gearPistonButton != gearPistonButtonPressed) {
-            gearPistonButtonPressed = gearPistonButton;
-            if (gearPistonButton) {
-                gearPistonActivated = !gearPistonActivated;
-                gearPiston.latchGear(gearPistonActivated);
-            }
-        }
+        gearPiston.latchGear(driver.getButton(Button.A));
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
