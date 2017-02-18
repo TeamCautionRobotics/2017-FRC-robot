@@ -24,8 +24,8 @@ public class DriveBase {
     }
 
     public void drive(double left, double right) {
-        driveLeft.set(-left);
-        driveRight.set(right);
+        driveLeft.set(left);
+        driveRight.set(-right);
     }
 
     public void drive(double speed) {
