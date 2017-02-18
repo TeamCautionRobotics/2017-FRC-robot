@@ -11,7 +11,7 @@ public class Winch {
 
     public void moveWinch(boolean moveUp) {
         if (moveUp) {
-            winch.set(0.5);
+            winch.set(-1);
         } else {
             winch.set(0);
         }

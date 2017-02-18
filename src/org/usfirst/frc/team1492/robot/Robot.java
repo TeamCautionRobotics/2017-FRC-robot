@@ -91,7 +91,7 @@ public class Robot extends IterativeRobot {
 
         driveBase.useHighGear(driveHighGear);
 
-        winch.moveWinch(manipulator.getButton(Button.A));
+        winch.moveWinch(manipulator.getButton(Button.X));
 
         boolean gearPistonButton = manipulator.getButton(Button.RIGHT_BUMPER);
         if (gearPistonButton != gearPistonButtonPressed) {
