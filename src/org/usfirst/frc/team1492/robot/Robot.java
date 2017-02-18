@@ -2,7 +2,6 @@ package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
-import org.usfirst.frc.team1492.robot.Winch.WinchDirections;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -92,16 +91,7 @@ public class Robot extends IterativeRobot {
 
         driveBase.useHighGear(driveHighGear);
 
-
-        boolean winchButtonOut = manipulator.getButton(Button.A);
-        boolean winchButtonIn = manipulator.getButton(Button.Y);
-        if (winchButtonOut) {
-            winch.moveWinch(WinchDirections.UP);
-        } else if (winchButtonIn) {
-            winch.moveWinch(WinchDirections.DOWN);
-        } else {
-            winch.moveWinch(WinchDirections.STOP);
-        }
+        winch.moveWinch(manipulator.getButton(Button.A));
 
         boolean gearPistonButton = manipulator.getButton(Button.RIGHT_BUMPER);
         if (gearPistonButton != gearPistonButtonPressed) {
@@ -113,7 +103,7 @@ public class Robot extends IterativeRobot {
         }
 
         if (winchKill.get()) {
-            winch.moveWinch(WinchDirections.STOP);
+            winch.moveWinch(false);
         }
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
