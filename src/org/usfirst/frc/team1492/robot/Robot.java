@@ -4,6 +4,7 @@ import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 
 
 /**
@@ -23,13 +24,11 @@ public class Robot extends IterativeRobot {
 
     Winch winch;
 
+    VictorSP outfeedMotor;
+
     Doors doors;
 
-    boolean shiftButtonPressed = false;
     boolean driveHighGear = false;
-
-    boolean gearPistonButtonPressed = false;
-    boolean gearPistonActivated = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -44,6 +43,8 @@ public class Robot extends IterativeRobot {
 
         // TODO: Limit switch for winch
         winch = new Winch(3);
+
+        outfeedMotor = new VictorSP(2);
 
         doors = new Doors(2, 3, 4);
 
@@ -90,18 +91,13 @@ public class Robot extends IterativeRobot {
 
         winch.moveWinch(manipulator.getButton(Button.X));
 
-        boolean gearPistonButton = manipulator.getButton(Button.RIGHT_BUMPER);
-        if (gearPistonButton != gearPistonButtonPressed) {
-            gearPistonButtonPressed = gearPistonButton;
-            if (gearPistonButton) {
-                gearPistonActivated = !gearPistonActivated;
-                gearPiston.latchGear(gearPistonActivated);
-            }
-        }
+        gearPiston.latchGear(driver.getButton(Button.A));
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
+        doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
+        outfeedMotor.set(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     /**
