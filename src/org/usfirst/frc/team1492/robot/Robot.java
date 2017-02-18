@@ -118,7 +118,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
-        driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
+        driveBase.drive(-driver.getAxis(Axis.LEFT_Y), -driver.getAxis(Axis.RIGHT_Y));
 
         if (driver.getButton(Button.LEFT_BUMPER)) {
             driveHighGear = false;
