@@ -3,8 +3,11 @@ package org.usfirst.frc.team1492.robot.autonomous;
 import org.usfirst.frc.team1492.robot.Doors;
 import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.GearPiston;
-
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.usfirst.frc.team1492.robot.autonomous.commands.AlignWithVisionCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.DelayCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
+import org.usfirst.frc.team1492.robot.autonomous.commands.TurnInPlaceCommand;
 
 public class CommandFactory {
 	private DriveBase driveBase;
@@ -17,8 +20,32 @@ public class CommandFactory {
 		this.doors = doors;
 	}
 	
-	public MoveStraightCommand makeMoveStraightCommand(double speed, double time){
-		return new MoveStraightCommand(driveBase, speed, time);
+	public Command moveStraight(double speed, double time) {
+	    return moveStraight(false, speed, time);
+	}
+	
+	public Command moveStraight(boolean highGear, double speed, double time) {
+		return new MoveStraightCommand(driveBase, highGear, speed, time);
+	}
+	
+	public Command turnInPlace(double speed, double targetAngle) {
+	    return turnInPlace(false, speed, targetAngle);
+	}
+	
+	public Command turnInPlace(boolean highGear, double speed, double targetAngle) {
+		return new TurnInPlaceCommand(driveBase, highGear, speed, targetAngle);
+	}
+
+	public Command alignWithVision() {
+		return new AlignWithVisionCommand(driveBase);
+	}
+
+	public Command setGearPiston(boolean out) {
+		return new SetGearPiston(gearPiston, out);
+	}
+
+	public Command wait(double time) {
+		return new DelayCommand(time);
 	}
 
 }

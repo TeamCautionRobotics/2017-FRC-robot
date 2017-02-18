@@ -1,7 +1,11 @@
 package org.usfirst.frc.team1492.robot;
 
+import java.util.HashMap;
+
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
+import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
+import org.usfirst.frc.team1492.robot.autonomous.Mission;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -27,6 +31,10 @@ public class Robot extends IterativeRobot {
     VictorSP outfeedMotor;
 
     Doors doors;
+    
+    Mission activeMission;
+    CommandFactory commandFactory;
+    HashMap<Integer, Mission> missions = new HashMap<Integer, Mission>();
 
     boolean driveHighGear = false;
 
@@ -50,6 +58,21 @@ public class Robot extends IterativeRobot {
 
         driver = new Gamepad(0);
         manipulator = new Gamepad(1);
+        
+        
+        commandFactory = new CommandFactory(driveBase, gearPiston, doors);
+        
+        Mission testMission = new Mission(0, missions);
+        testMission.add(commandFactory.moveStraight(false, 0.4, 2.0));
+        testMission.add(commandFactory.turnInPlace(false, 0.4, 50));
+        testMission.add(commandFactory.alignWithVision());
+        testMission.add(commandFactory.setGearPiston(true));
+        testMission.add(commandFactory.wait(1.0));
+        testMission.add(commandFactory.moveStraight(false, -0.4, 1.0));
+        testMission.add(commandFactory.setGearPiston(false));
+        
+        Mission goBack = new Mission(1, missions);
+        goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
     }
 
     /**
@@ -58,13 +81,27 @@ public class Robot extends IterativeRobot {
     @Override
     public void autonomousInit() {
     	driveBase.resetGyro();
+
+        activeMission = missions.get(1);
+    	
+    	if(activeMission != null){
+    		activeMission.reset();
+			System.out.println("Mission " + activeMission.getID() + " Started");
+    	}
     }
 
     /**
      * This function is called periodically during autonomous
      */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+    	if(activeMission != null){
+    		if(activeMission.run()){
+    			System.out.println("Mission " + activeMission.getID() + " Complete");
+    			activeMission = null;
+    		}
+    	}
+    }
 
     @Override
     public void teleopInit() {
@@ -78,7 +115,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
-        driveBase.drive(driver.getAxis(Axis.LEFT_Y), driver.getAxis(Axis.RIGHT_Y));
+        driveBase.drive(-driver.getAxis(Axis.LEFT_Y), -driver.getAxis(Axis.RIGHT_Y));
 
         if (driver.getButton(Button.LEFT_BUMPER)) {
             driveHighGear = false;
