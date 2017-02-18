@@ -3,7 +3,6 @@ package org.usfirst.frc.team1492.robot;
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 
@@ -23,7 +22,6 @@ public class Robot extends IterativeRobot {
     GearPiston gearPiston;
 
     Winch winch;
-    DigitalInput winchKill;
 
     Doors doors;
 
@@ -46,7 +44,6 @@ public class Robot extends IterativeRobot {
 
         // TODO: Limit switch for winch
         winch = new Winch(3);
-        winchKill = new DigitalInput(0);
 
         doors = new Doors(2, 3, 4);
 
@@ -100,10 +97,6 @@ public class Robot extends IterativeRobot {
                 gearPistonActivated = !gearPistonActivated;
                 gearPiston.latchGear(gearPistonActivated);
             }
-        }
-
-        if (winchKill.get()) {
-            winch.moveWinch(false);
         }
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
