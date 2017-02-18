@@ -90,6 +90,7 @@ public class Robot extends IterativeRobot {
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
+        doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
     }
 
