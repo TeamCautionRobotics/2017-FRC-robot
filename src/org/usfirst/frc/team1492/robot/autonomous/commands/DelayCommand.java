@@ -4,7 +4,7 @@ import org.usfirst.frc.team1492.robot.autonomous.Command;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class DealyCommand implements Command {
+public class DelayCommand implements Command {
 	
 	Timer timer;
 	
@@ -13,7 +13,7 @@ public class DealyCommand implements Command {
 	boolean needsToStart;
 	boolean complete;
 
-	public DealyCommand(double time) {
+	public DelayCommand(double time) {
 		this.time = time;
 		
 		timer = new Timer();

@@ -4,7 +4,7 @@ import org.usfirst.frc.team1492.robot.Doors;
 import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.GearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.AlignWithVisionCommand;
-import org.usfirst.frc.team1492.robot.autonomous.commands.DealyCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.DelayCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.TurnInPlaceCommand;
@@ -45,7 +45,7 @@ public class CommandFactory {
 	}
 
 	public Command wait(double time) {
-		return new DealyCommand(time);
+		return new DelayCommand(time);
 	}
 
 }
