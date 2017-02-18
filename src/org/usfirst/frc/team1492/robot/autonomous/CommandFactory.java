@@ -5,11 +5,9 @@ import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.GearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.AlignWithVisionCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.DealyCommand;
-import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.TurnInPlaceCommand;
-
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class CommandFactory {
 	private DriveBase driveBase;
@@ -22,11 +20,19 @@ public class CommandFactory {
 		this.doors = doors;
 	}
 	
-	public Command moveStraight(boolean highGear, double speed, double time){
+	public Command moveStraight(double speed, double time) {
+	    return moveStraight(false, speed, time);
+	}
+	
+	public Command moveStraight(boolean highGear, double speed, double time) {
 		return new MoveStraightCommand(driveBase, highGear, speed, time);
 	}
 	
-	public Command turnInPlace(boolean highGear, double speed, double targetAngle){
+	public Command turnInPlace(double speed, double targetAngle) {
+	    return turnInPlace(false, speed, targetAngle);
+	}
+	
+	public Command turnInPlace(boolean highGear, double speed, double targetAngle) {
 		return new TurnInPlaceCommand(driveBase, highGear, speed, targetAngle);
 	}
 
