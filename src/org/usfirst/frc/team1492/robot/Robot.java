@@ -4,6 +4,7 @@ import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 
 
 /**
@@ -23,6 +24,8 @@ public class Robot extends IterativeRobot {
 
     Winch winch;
 
+    VictorSP outfeedMotor;
+
     Doors doors;
 
     boolean driveHighGear = false;
@@ -40,6 +43,8 @@ public class Robot extends IterativeRobot {
 
         // TODO: Limit switch for winch
         winch = new Winch(3);
+
+        outfeedMotor = new VictorSP(2);
 
         doors = new Doors(2, 3, 4);
 
@@ -92,6 +97,7 @@ public class Robot extends IterativeRobot {
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
+        outfeedMotor.set(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     /**
