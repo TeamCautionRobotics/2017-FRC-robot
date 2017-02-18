@@ -2,9 +2,7 @@ package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
-import org.usfirst.frc.team1492.robot.Winch.WinchDirections;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 
@@ -24,7 +22,6 @@ public class Robot extends IterativeRobot {
     GearPiston gearPiston;
 
     Winch winch;
-    DigitalInput winchKill;
 
     Doors doors;
 
@@ -47,7 +44,6 @@ public class Robot extends IterativeRobot {
 
         // TODO: Limit switch for winch
         winch = new Winch(3);
-        winchKill = new DigitalInput(0);
 
         doors = new Doors(2, 3, 4);
 
@@ -92,16 +88,7 @@ public class Robot extends IterativeRobot {
 
         driveBase.useHighGear(driveHighGear);
 
-
-        boolean winchButtonOut = manipulator.getButton(Button.A);
-        boolean winchButtonIn = manipulator.getButton(Button.Y);
-        if (winchButtonOut) {
-            winch.moveWinch(WinchDirections.UP);
-        } else if (winchButtonIn) {
-            winch.moveWinch(WinchDirections.DOWN);
-        } else {
-            winch.moveWinch(WinchDirections.STOP);
-        }
+        winch.moveWinch(manipulator.getButton(Button.X));
 
         boolean gearPistonButton = manipulator.getButton(Button.RIGHT_BUMPER);
         if (gearPistonButton != gearPistonButtonPressed) {
@@ -110,10 +97,6 @@ public class Robot extends IterativeRobot {
                 gearPistonActivated = !gearPistonActivated;
                 gearPiston.latchGear(gearPistonActivated);
             }
-        }
-
-        if (winchKill.get()) {
-            winch.moveWinch(WinchDirections.STOP);
         }
 
         doors.infeedOpen(manipulator.getButton(Button.Y));
