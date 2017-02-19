@@ -5,25 +5,15 @@ import edu.wpi.first.wpilibj.VictorSP;
 class Winch {
 	private VictorSP winch;
 
-    enum WinchDirections {
-        UP, DOWN, STOP
-    }
-
-    Winch(int motorChannel) {
+Winch(int motorChannel) {
         winch = new VictorSP(motorChannel);
-    }
+}
 
-    void moveWinch(WinchDirections direction) {
-        switch (direction) {
-            case UP:
-                winch.set(0.5);
-                break;
-            case DOWN:
-                winch.set(-0.5);
-                break;
-            case STOP:
-                winch.set(0);
-                break;
+    void moveWinch(boolean moveUp) {
+        if (moveUp) {
+            winch.set(-1);
+        } else {
+            winch.set(0);
         }
     }
 }

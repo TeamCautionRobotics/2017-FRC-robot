@@ -1,7 +1,8 @@
-package org.usfirst.frc.team1492.robot.autonomous;
+package org.usfirst.frc.team1492.robot.autonomous.commands;
 
 
 import org.usfirst.frc.team1492.robot.DriveBase;
+import org.usfirst.frc.team1492.robot.autonomous.Command;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -11,6 +12,7 @@ public class MoveStraightCommand implements Command{
 	
 	private Timer timer;
 	
+	private boolean highGear;
 	private double speed;
 	private double time;
 	
@@ -19,15 +21,16 @@ public class MoveStraightCommand implements Command{
 
 	private double heading;
 
-	public MoveStraightCommand(DriveBase driveBase, double speed, double time) {
+	public MoveStraightCommand(DriveBase driveBase, boolean highGear, double speed, double time) {
 		this.driveBase = driveBase;
 		
+		this.highGear = highGear;
 		this.speed = speed;
 		this.time = time;
-		needsToStart = true;
-		complete = false;
 		
 		timer = new Timer();
+		
+		reset();
 	}
 
 	@Override
@@ -35,6 +38,7 @@ public class MoveStraightCommand implements Command{
 		if(needsToStart){
 			timer.reset();
 			timer.start();
+			driveBase.useHighGear(highGear);
 			heading = driveBase.getGyroAngle();
 			needsToStart = false;
 		}
@@ -48,10 +52,17 @@ public class MoveStraightCommand implements Command{
 				complete = true;
 			}else{
 				double angle = heading - driveBase.getGyroAngle();
+				System.out.println("Angle: "+angle+"  Heading: "+heading);
 				driveBase.drive(speed, speed - angle*0.03);
 			}
 			return false;
 		}
+	}
+
+	@Override
+	public void reset() {
+		needsToStart = true;
+		complete = false;
 	}
 
 }
