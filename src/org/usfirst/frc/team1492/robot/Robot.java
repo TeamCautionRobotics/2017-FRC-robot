@@ -27,6 +27,8 @@ public class Robot extends IterativeRobot {
     DigitalInput winchKill;
 
     Doors doors;
+    
+    Outfeed outfeed;
 
     boolean shiftButtonPressed = false;
     boolean driveHighGear = false;
@@ -50,6 +52,8 @@ public class Robot extends IterativeRobot {
         winchKill = new DigitalInput(0);
 
         doors = new Doors(2, 3, 4);
+        
+        outfeed = new Outfeed(2);
 
         driver = new Gamepad(0);
         manipulator = new Gamepad(1);
@@ -111,6 +115,8 @@ public class Robot extends IterativeRobot {
                 gearPiston.latchGear(gearPistonActivated);
             }
         }
+        
+        outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
         if (winchKill.get()) {
             winch.moveWinch(WinchDirections.STOP);
