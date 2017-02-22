@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class GearPiston {
 	private Solenoid gearLatch;
 
-    GearPiston(int latchChannel) {
+    public GearPiston(int latchChannel) {
         gearLatch = new Solenoid(latchChannel);
     }
 
-    void latchGear(boolean latch) {
+    public void latchGear(boolean latch) {
         gearLatch.set(latch);
     }
 }

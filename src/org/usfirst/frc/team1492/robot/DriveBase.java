@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-class DriveBase {
+public class DriveBase {
 
     private VictorSP driveLeft;
     private VictorSP driveRight;
@@ -13,7 +13,7 @@ class DriveBase {
     
     private ADXRS450_Gyro gyro;
 
-    DriveBase(int left, int right, int shifterChannel) {
+    public DriveBase(int left, int right, int shifterChannel) {
         driveLeft = new VictorSP(left);
         driveRight = new VictorSP(right);
 
@@ -23,16 +23,16 @@ class DriveBase {
         gyro.calibrate();
     }
 
-    void drive(double left, double right) {
+    public void drive(double left, double right) {
         driveLeft.set(left);
         driveRight.set(-right);
     }
 
-    void drive(double speed) {
+    public void drive(double speed) {
         drive(speed, speed);
     }
 
-    void useHighGear(boolean highGear) {
+    public void useHighGear(boolean highGear) {
         shifter.set(!highGear);
     }
 
@@ -40,7 +40,7 @@ class DriveBase {
         gyro.reset();
 	}
 
-	double getGyroAngle() {
+	public double getGyroAngle() {
 		return gyro.getAngle();
 	}
 }
