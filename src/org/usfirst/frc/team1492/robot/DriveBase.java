@@ -3,7 +3,6 @@ package org.usfirst.frc.team1492.robot;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class DriveBase {
 
@@ -33,7 +32,7 @@ public class DriveBase {
     }
 
     public void useHighGear(boolean highGear) {
-        shifter.set(!highGear);
+        shifter.set(highGear);
     }
 
 	public void resetGyro() {
