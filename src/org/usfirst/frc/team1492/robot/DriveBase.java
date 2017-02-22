@@ -33,7 +33,7 @@ public class DriveBase {
     }
 
     public void useHighGear(boolean highGear) {
-        shifter.set(!highGear);
+        shifter.set(highGear);
     }
 
 	public void resetGyro() {
