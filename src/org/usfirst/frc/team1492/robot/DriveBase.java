@@ -9,7 +9,7 @@ public class DriveBase {
 
     private VictorSP driveLeft;
     private VictorSP driveRight;
-    private Solenoid shifter;
+    Solenoid shifter;
     
     private ADXRS450_Gyro gyro;
 
@@ -36,7 +36,7 @@ public class DriveBase {
         shifter.set(!highGear);
     }
 
-	void resetGyro() {
+	public void resetGyro() {
         gyro.reset();
 	}
 
