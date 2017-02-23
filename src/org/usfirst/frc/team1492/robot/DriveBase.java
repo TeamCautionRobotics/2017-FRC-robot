@@ -9,7 +9,7 @@ public class DriveBase {
 
     private VictorSP driveLeft;
     private VictorSP driveRight;
-    Solenoid shifter;
+    private Solenoid shifter;
     
     private ADXRS450_Gyro gyro;
 
