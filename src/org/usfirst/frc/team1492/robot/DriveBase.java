@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class DriveBase {
 
-    VictorSP driveLeft;
-    VictorSP driveRight;
-    Solenoid shifter;
+    private VictorSP driveLeft;
+    private VictorSP driveRight;
+    private Solenoid shifter;
     
-    ADXRS450_Gyro gyro;
+    private ADXRS450_Gyro gyro;
 
     public DriveBase(int left, int right, int shifterChannel) {
         driveLeft = new VictorSP(left);

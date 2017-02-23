@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class Doors {
 
-    Solenoid epiglottis;
-    Solenoid outfeed;
-    Solenoid infeed;
+    private Solenoid epiglottis;
+    private Solenoid outfeed;
+    private Solenoid infeed;
 
     public Doors(int epiglottisChannel, int outfeedChannel, int infeedChannel) {
         epiglottis = new Solenoid(epiglottisChannel);
