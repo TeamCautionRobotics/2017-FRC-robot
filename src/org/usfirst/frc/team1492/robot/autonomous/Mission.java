@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1492.robot.autonomous;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Mission {
 	
@@ -11,8 +10,7 @@ public class Mission {
 
 	private int id;
 	
-	public Mission(int id, HashMap<Integer, Mission> missions) {
-        missions.put(id, this);
+	public Mission(int id) {
         this.id = id;
 	}
 	
