@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class Outfeed {
 	private VictorSP outfeed;
 
-	Outfeed(int motorChannel) {
+	public Outfeed(int motorChannel) {
 		outfeed = new VictorSP(motorChannel);
 	}
 	
-	void moveOutfeed(double motorPower) {
+	public void moveOutfeed(double motorPower) {
 		outfeed.set(motorPower);
 	}
 
