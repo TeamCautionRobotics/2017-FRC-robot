@@ -4,6 +4,7 @@ import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
+import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -36,6 +37,8 @@ public class Robot extends IterativeRobot {
     Outfeed outfeed;
 
     boolean driveHighGear = false;
+
+    MissionSendable missionSendable;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -77,6 +80,9 @@ public class Robot extends IterativeRobot {
 
         missionChooser.addObject("goBack", goBack);
         SmartDashboard.putData("auto mission", missionChooser);
+
+        missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
+        SmartDashboard.putData(missionSendable);
     }
 
     /**
@@ -139,6 +145,8 @@ public class Robot extends IterativeRobot {
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisSwitch(manipulator.getButton(Button.B));
+
+        missionSendable.run();
     }
 
     /**
