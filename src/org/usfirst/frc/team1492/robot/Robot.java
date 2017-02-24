@@ -8,7 +8,6 @@ import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.VictorSP;
 
 
 /**
@@ -28,13 +27,13 @@ public class Robot extends IterativeRobot {
 
     Winch winch;
 
-    VictorSP outfeedMotor;
-
     Doors doors;
-    
+
     Mission activeMission;
     CommandFactory commandFactory;
     HashMap<Integer, Mission> missions = new HashMap<Integer, Mission>();
+
+    Outfeed outfeed;
 
     boolean driveHighGear = false;
 
@@ -52,9 +51,9 @@ public class Robot extends IterativeRobot {
         // TODO: Limit switch for winch
         winch = new Winch(3);
 
-        outfeedMotor = new VictorSP(2);
-
         doors = new Doors(2, 3, 4);
+
+        outfeed = new Outfeed(2);
 
         driver = new Gamepad(0);
         manipulator = new Gamepad(1);
@@ -130,11 +129,11 @@ public class Robot extends IterativeRobot {
 
         gearPiston.latchGear(driver.getButton(Button.A));
 
+        outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
+
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisSwitch(manipulator.getButton(Button.B));
-
-        outfeedMotor.set(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     /**
