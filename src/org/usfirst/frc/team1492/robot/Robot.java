@@ -118,10 +118,6 @@ public class Robot extends IterativeRobot {
         
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
-        if (winchKill.get()) {
-            winch.moveWinch(WinchDirections.STOP);
-        }
-
         doors.infeedOpen(manipulator.getButton(Button.Y));
         doors.outfeedOpen(manipulator.getButton(Button.A));
 

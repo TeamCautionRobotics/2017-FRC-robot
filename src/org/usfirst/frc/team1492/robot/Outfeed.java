@@ -2,7 +2,7 @@ package org.usfirst.frc.team1492.robot;
 
 import edu.wpi.first.wpilibj.VictorSP;
 
-class Outfeed {
+public class Outfeed {
 	private VictorSP outfeed;
 
 	Outfeed(int motorChannel) {
