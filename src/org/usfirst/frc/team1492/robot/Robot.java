@@ -1,13 +1,13 @@
 package org.usfirst.frc.team1492.robot;
 
-import java.util.HashMap;
-
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 
     Mission activeMission;
     CommandFactory commandFactory;
-    HashMap<Integer, Mission> missions = new HashMap<Integer, Mission>();
+    SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
 
     Outfeed outfeed;
 
@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
         
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
         
-        Mission testMission = new Mission(0, missions);
+        Mission testMission = new Mission(0);
         testMission.add(commandFactory.moveStraight(false, 0.4, 2.0));
         testMission.add(commandFactory.turnInPlace(false, 0.4, 50));
         testMission.add(commandFactory.alignWithVision());
@@ -70,8 +70,13 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.moveStraight(false, -0.4, 1.0));
         testMission.add(commandFactory.setGearPiston(false));
         
-        Mission goBack = new Mission(1, missions);
+        missionChooser.addObject("testMission", testMission);
+
+        Mission goBack = new Mission(1);
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
+
+        missionChooser.addObject("goBack", goBack);
+        SmartDashboard.putData("auto mission", missionChooser);
     }
 
     /**
@@ -81,7 +86,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
     	driveBase.resetGyro();
 
-        activeMission = missions.get(1);
+        activeMission = missionChooser.getSelected();
     	
     	if(activeMission != null){
     		activeMission.reset();
