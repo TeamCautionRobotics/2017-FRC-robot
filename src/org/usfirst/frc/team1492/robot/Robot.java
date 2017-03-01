@@ -40,6 +40,9 @@ public class Robot extends IterativeRobot {
 
     MissionSendable missionSendable;
 
+    boolean infeedButtonPressed = false;
+    boolean infeedOpen = false;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -142,7 +145,16 @@ public class Robot extends IterativeRobot {
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
-        doors.infeedOpen(manipulator.getButton(Button.Y));
+        boolean infeedButton = manipulator.getButton(Button.Y);
+        if (infeedButton != infeedButtonPressed) {
+            infeedButtonPressed = infeedButton;
+            
+            if (infeedButton) {
+                infeedOpen = !infeedOpen;
+                doors.infeedOpen(infeedOpen);
+            }
+        }
+
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
