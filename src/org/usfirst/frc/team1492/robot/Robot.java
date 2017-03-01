@@ -164,7 +164,7 @@ public class Robot extends IterativeRobot {
             infeedOpen = true;
         }
 
-        doors.epiglottisSwitch(epiglottisUp);
+        doors.epiglottisUp(epiglottisUp);
         doors.outfeedOpen(outfeedOpen);
         doors.infeedOpen(infeedOpen);
 
