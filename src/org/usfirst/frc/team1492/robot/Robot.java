@@ -133,6 +133,17 @@ public class Robot extends IterativeRobot {
         if (driver.getButton(Button.RIGHT_BUMPER)) {
             driveHighGear = true;
         }
+        
+        if (driver.getButton(Button.RIGHT_BUMPER)) {
+        	doors.epiglottisSwitch(false);
+        	doors.outfeedOpen(false);
+        	doors.infeedOpen(true);
+        }
+        
+        if (driver.getButton(Button.LEFT_BUMPER)) {
+        	doors.outfeedOpen(true);
+        	doors.infeedOpen(true);
+        }
 
         driveBase.useHighGear(driveHighGear);
 
