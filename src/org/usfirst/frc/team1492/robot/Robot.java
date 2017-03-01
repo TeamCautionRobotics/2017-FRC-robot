@@ -21,7 +21,8 @@ public class Robot extends IterativeRobot {
 
     DriveBase driveBase;
 
-    Gamepad driver;
+    EnhancedJoystick driverLeft;
+    EnhancedJoystick driverRight;
     Gamepad manipulator;
 
     GearPiston gearPiston;
@@ -61,10 +62,10 @@ public class Robot extends IterativeRobot {
 
         outfeed = new Outfeed(2);
 
-        driver = new Gamepad(0);
-        manipulator = new Gamepad(1);
-        
-        
+        driverLeft = new EnhancedJoystick(0, 0.1);
+        driverRight = new EnhancedJoystick(1, 0.1);
+        manipulator = new Gamepad(2);
+
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
         
         Mission testMission = new Mission(0);
@@ -128,12 +129,14 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
-        driveBase.drive(-driver.getAxis(Axis.LEFT_Y), -driver.getAxis(Axis.RIGHT_Y));
+        // The joystick axes are intentionally reversed, so for the joystick the outfeed
+        // is the front of the robot.
+        driveBase.drive(driverRight.getY(), driverLeft.getY());
 
-        if (driver.getButton(Button.LEFT_BUMPER)) {
+        if (driverRight.getRawButton(2)) {
             driveHighGear = false;
         }
-        if (driver.getButton(Button.RIGHT_BUMPER)) {
+        if (driverRight.getRawButton(3)) {
             driveHighGear = true;
         }
 
@@ -141,7 +144,7 @@ public class Robot extends IterativeRobot {
 
         winch.moveWinch(manipulator.getButton(Button.X));
 
-        gearPiston.latchGear(driver.getButton(Button.A));
+        gearPiston.latchGear(driverRight.getTrigger());
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
