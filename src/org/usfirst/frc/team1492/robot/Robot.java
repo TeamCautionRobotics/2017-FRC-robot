@@ -133,16 +133,18 @@ public class Robot extends IterativeRobot {
         if (driver.getButton(Button.RIGHT_BUMPER)) {
             driveHighGear = true;
         }
-        
-        if (driver.getButton(Button.RIGHT_BUMPER)) {
-        	doors.epiglottisSwitch(false);
-        	doors.outfeedOpen(false);
-        	doors.infeedOpen(true);
+
+        // Load fuel
+        if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+            doors.epiglottisSwitch(false);
+            doors.outfeedOpen(false);
+            doors.infeedOpen(true);
         }
-        
-        if (driver.getButton(Button.LEFT_BUMPER)) {
-        	doors.outfeedOpen(true);
-        	doors.infeedOpen(true);
+
+        // Dispense fuel
+        if (manipulator.getButton(Button.LEFT_BUMPER)) {
+            doors.outfeedOpen(true);
+            doors.infeedOpen(true);
         }
 
         driveBase.useHighGear(driveHighGear);
@@ -152,10 +154,6 @@ public class Robot extends IterativeRobot {
         gearPiston.latchGear(driver.getButton(Button.A));
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
-
-        doors.infeedOpen(manipulator.getButton(Button.Y));
-        doors.outfeedOpen(manipulator.getButton(Button.A));
-        doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
         missionSendable.run();
     }
