@@ -153,7 +153,7 @@ public class Robot extends IterativeRobot {
 
         // Load fuel
         if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-            epiglottisUp = false;
+            epiglottisUp = true;
             outfeedOpen = false;
             infeedOpen = true;
         }
