@@ -38,6 +38,9 @@ public class Robot extends IterativeRobot {
 
     boolean driveHighGear = false;
 
+    private boolean infeedButtonPressed = false;
+    private boolean infeedOpen = false;
+
     MissionSendable missionSendable;
 
     /**
@@ -134,20 +137,37 @@ public class Robot extends IterativeRobot {
             driveHighGear = true;
         }
 
+        driveBase.useHighGear(driveHighGear);
+
+
+        boolean infeedButton = manipulator.getButton(Button.Y);
+        if (infeedButton != infeedButtonPressed) {
+            infeedButtonPressed = infeedButton;
+            if (infeedButton) {
+                infeedOpen = !infeedOpen;
+            }
+        }
+
+        boolean epiglottisUp = manipulator.getButton(Button.B);
+        boolean outfeedOpen = manipulator.getButton(Button.A);
+
         // Load fuel
         if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-            doors.epiglottisSwitch(false);
-            doors.outfeedOpen(false);
-            doors.infeedOpen(true);
+            epiglottisUp = false;
+            outfeedOpen = false;
+            infeedOpen = true;
         }
 
         // Dispense fuel
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
-            doors.outfeedOpen(true);
-            doors.infeedOpen(true);
+            outfeedOpen = true;
+            infeedOpen = true;
         }
 
-        driveBase.useHighGear(driveHighGear);
+        doors.epiglottisSwitch(epiglottisUp);
+        doors.outfeedOpen(outfeedOpen);
+        doors.infeedOpen(infeedOpen);
+
 
         winch.moveWinch(manipulator.getButton(Button.X));
 
