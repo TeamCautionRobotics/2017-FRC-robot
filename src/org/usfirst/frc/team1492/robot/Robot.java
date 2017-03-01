@@ -83,8 +83,24 @@ public class Robot extends IterativeRobot {
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
 
         missionChooser.addObject("goBack", goBack);
-        SmartDashboard.putData("auto mission", missionChooser);
 
+        Mission driveLow = new Mission(2);
+        driveLow.add(commandFactory.moveStraight(false, 0.4, 9));
+        missionChooser.addObject("driveLow", driveLow);
+
+        Mission driveHigh = new Mission(3);
+        driveHigh.add(commandFactory.moveStraight(true, 0.4, 3));
+        missionChooser.addObject("driveHigh", driveHigh);
+
+        Mission driveLowFull = new Mission(4);
+        driveLowFull.add(commandFactory.moveStraight(false, 1, 4));
+        missionChooser.addObject("driveLowFull", driveLowFull);
+
+        Mission driveHighFull = new Mission(5);
+        driveHighFull.add(commandFactory.moveStraight(true, 1, 1));
+        missionChooser.addObject("driveHighFull", driveHighFull);
+
+        SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
         SmartDashboard.putData(missionSendable);
     }
