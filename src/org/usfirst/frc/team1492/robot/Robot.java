@@ -6,7 +6,10 @@ import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -36,6 +39,8 @@ public class Robot extends IterativeRobot {
     SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
 
     Outfeed outfeed;
+    
+    Relay humanLoadLight;
 
     boolean driveHighGear = false;
 
@@ -66,6 +71,8 @@ public class Robot extends IterativeRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
+        humanLoadLight = new Relay(0);
+        
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
         
         Mission testMission = new Mission(0);
@@ -178,6 +185,16 @@ public class Robot extends IterativeRobot {
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
+        doors.outfeedOpen(manipulator.getButton(Button.A));
+        doors.epiglottisUp(manipulator.getButton(Button.B));
+        if (manipulator.getButton(Button.LEFT_BUMPER)){
+            humanLoadLight.set(Relay.Value.kForward);	
+        } else if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+        	humanLoadLight.set(Relay.Value.kReverse);
+        } else {
+        	humanLoadLight.set(Relay.Value.kOff);
+        }
+        
         missionSendable.run();
     }
 
