@@ -185,9 +185,9 @@ public class Robot extends IterativeRobot {
 
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisUp(manipulator.getButton(Button.B));
-        if (manipulator.getButton(Button.LEFT_BUMPER)){
+        if (driver.getButton(Button.X)){
             humanLoadLight.set(Relay.Value.kForward);	
-        } else if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+        } else if (driver.getButton(Button.Y)) {
         	humanLoadLight.set(Relay.Value.kReverse);
         } else {
         	humanLoadLight.set(Relay.Value.kOff);
