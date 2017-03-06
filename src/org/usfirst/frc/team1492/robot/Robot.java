@@ -131,12 +131,12 @@ public class Robot extends IterativeRobot {
 
         // The joystick axes are intentionally reversed, so for the joystick the outfeed
         // is the front of the robot.
-        driveBase.drive(driverRight.getY(), driverLeft.getY());
+        driveBase.drive(driverRight.getY() + driverLeft.getX(), driverRight.getY() - driverLeft.getX());
 
-        if (driverRight.getRawButton(2)) {
+        if (driverLeft.getRawButton(2)) {
             driveHighGear = false;
         }
-        if (driverRight.getRawButton(3)) {
+        if (driverRight.getRawButton(2)) {
             driveHighGear = true;
         }
 
