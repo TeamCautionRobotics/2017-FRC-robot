@@ -139,24 +139,41 @@ public class Robot extends IterativeRobot {
 
         driveBase.useHighGear(driveHighGear);
 
+
+        boolean infeedButton = manipulator.getButton(Button.Y);
+        if (infeedButton != infeedButtonPressed) {
+            infeedButtonPressed = infeedButton;
+            if (infeedButton) {
+                infeedOpen = !infeedOpen;
+            }
+        }
+
+        boolean epiglottisUp = manipulator.getButton(Button.B);
+        boolean outfeedOpen = manipulator.getButton(Button.A);
+
+        // Load fuel
+        if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+            epiglottisUp = true;
+            outfeedOpen = false;
+            infeedOpen = true;
+        }
+
+        // Dispense fuel
+        if (manipulator.getButton(Button.LEFT_BUMPER)) {
+            outfeedOpen = true;
+            infeedOpen = true;
+        }
+
+        doors.epiglottisUp(epiglottisUp);
+        doors.outfeedOpen(outfeedOpen);
+        doors.infeedOpen(infeedOpen);
+
+
         winch.moveWinch(manipulator.getButton(Button.X));
 
         gearPiston.latchGear(driver.getButton(Button.A));
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
-
-        boolean infeedButton = manipulator.getButton(Button.Y);
-        if (infeedButton != infeedButtonPressed) {
-            infeedButtonPressed = infeedButton;
-            
-            if (infeedButton) {
-                infeedOpen = !infeedOpen;
-                doors.infeedOpen(infeedOpen);
-            }
-        }
-
-        doors.outfeedOpen(manipulator.getButton(Button.A));
-        doors.epiglottisSwitch(manipulator.getButton(Button.B));
 
         missionSendable.run();
     }
