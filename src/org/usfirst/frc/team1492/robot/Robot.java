@@ -2,6 +2,7 @@ package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
+import org.usfirst.frc.team1492.robot.HumanLoadLight.LightMode;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
@@ -38,7 +39,7 @@ public class Robot extends IterativeRobot {
 
     Outfeed outfeed;
     
-    Relay humanLoadLight;
+    HumanLoadLight humanLoadLight;
 
     boolean driveHighGear = false;
 
@@ -65,11 +66,18 @@ public class Robot extends IterativeRobot {
 
         outfeed = new Outfeed(2);
 
+<<<<<<< HEAD
         driverLeft = new EnhancedJoystick(0, 0.1);
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
         humanLoadLight = new Relay(0);
+=======
+        driver = new Gamepad(0);
+        manipulator = new Gamepad(1);
+        
+        humanLoadLight = new HumanLoadLight(0);
+>>>>>>> making human load light object, setting light to fuel if epiglottis up
         
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
         
@@ -185,14 +193,18 @@ public class Robot extends IterativeRobot {
 
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisUp(manipulator.getButton(Button.B));
-        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5){
-            humanLoadLight.set(Relay.Value.kForward);	
-        } else if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5) {
-        	humanLoadLight.set(Relay.Value.kReverse);
-        } else {
-        	humanLoadLight.set(Relay.Value.kOff);
-        }
         
+        if (manipulator.getButton(Button.B)){
+            humanLoadLight.lightOn(LightMode.FUEL);
+        } else {
+	        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5){
+	            humanLoadLight.lightOn(LightMode.FUEL);	
+	        } else if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5) {
+	            humanLoadLight.lightOn(LightMode.GEAR);	
+	        } else {
+	            humanLoadLight.lightOn(LightMode.OFF);	
+	        }
+        }
         missionSendable.run();
     }
 
