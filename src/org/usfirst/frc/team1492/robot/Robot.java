@@ -164,7 +164,7 @@ public class Robot extends IterativeRobot {
         // Dispense fuel
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
             outfeedOpen = true;
-            infeedOpen = true;
+            infeedOpen = false;
         }
 
         doors.epiglottisUp(epiglottisUp);
