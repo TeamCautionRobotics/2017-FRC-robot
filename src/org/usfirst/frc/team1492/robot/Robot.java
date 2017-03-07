@@ -8,7 +8,6 @@ import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -194,8 +193,8 @@ public class Robot extends IterativeRobot {
         doors.outfeedOpen(manipulator.getButton(Button.A));
         doors.epiglottisUp(manipulator.getButton(Button.B));
         
-        if (manipulator.getButton(Button.B)){
-            humanLoadLight.lightOn(LightMode.FUEL);
+        if (!manipulator.getButton(Button.B)) {
+            humanLoadLight.lightOn(LightMode.FUEL);	
         } else {
 	        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5){
 	            humanLoadLight.lightOn(LightMode.FUEL);	

@@ -3,9 +3,9 @@ package org.usfirst.frc.team1492.robot;
 import edu.wpi.first.wpilibj.Relay;
 
 public class HumanLoadLight {
-    Relay humanloadlight;
+    private Relay humanloadlight;
     
-    enum LightMode {GEAR, FUEL, OFF}
+    public enum LightMode {GEAR, FUEL, OFF}
     
 	public HumanLoadLight(int relayPort) {
 		humanloadlight = new Relay(relayPort);
