@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
-        driveBase = new DriveBase(0, 1, 0);
+        driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
         driveBase.useHighGear(false);
 
         gearPiston = new GearPiston(1);
