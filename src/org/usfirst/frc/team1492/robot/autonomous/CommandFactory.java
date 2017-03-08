@@ -48,7 +48,7 @@ public class CommandFactory {
 		return new SetGearPiston(gearPiston, out);
 	}
 
-	public Command wait(double time) {
+	public Command delay(double time) {
 		return new DelayCommand(time);
 	}
 

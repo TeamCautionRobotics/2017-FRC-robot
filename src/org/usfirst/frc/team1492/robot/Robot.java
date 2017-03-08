@@ -82,7 +82,7 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.turnInPlace(false, 0.4, 50));
         testMission.add(commandFactory.alignWithVision());
         testMission.add(commandFactory.setGearPiston(true));
-        testMission.add(commandFactory.wait(1.0));
+        testMission.add(commandFactory.delay(1.0));
         testMission.add(commandFactory.moveStraight(false, -0.4, 1.0));
         testMission.add(commandFactory.setGearPiston(false));
         
@@ -98,9 +98,9 @@ public class Robot extends IterativeRobot {
         deployGear = new Mission(6);
         deployGear.add(commandFactory.moveStraight(false, 0, 0));
         deployGear.add(commandFactory.alignWithVision());
-        deployGear.add(commandFactory.wait(1));
+        deployGear.add(commandFactory.delay(1.0));
         deployGear.add(commandFactory.setGearPiston(true));
-        deployGear.add(commandFactory.wait(0.5));
+        deployGear.add(commandFactory.delay(0.5));
         deployGear.add(commandFactory.moveStraight(-1, 0.2));
         deployGear.add(commandFactory.setGearPiston(false));
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
