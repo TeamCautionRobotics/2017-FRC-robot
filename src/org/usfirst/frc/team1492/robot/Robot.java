@@ -98,7 +98,7 @@ public class Robot extends IterativeRobot {
         deployGear = new Mission(6);
         deployGear.add(commandFactory.moveStraight(false, 0, 0));
         deployGear.add(commandFactory.alignWithVision());
-        deployGear.add(commandFactory.delay(1.0));
+        deployGear.add(commandFactory.delay(0.7));
         deployGear.add(commandFactory.setGearPiston(true));
         deployGear.add(commandFactory.delay(0.5));
         deployGear.add(commandFactory.moveStraight(-1, 0.2));
