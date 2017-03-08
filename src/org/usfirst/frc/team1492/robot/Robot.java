@@ -45,8 +45,13 @@ public class Robot extends IterativeRobot {
 
     MissionSendable missionSendable;
 
+    Mission deployGear;
+
     boolean infeedButtonPressed = false;
     boolean infeedOpen = false;
+
+    boolean gearDeployButtonPressed = false;
+    boolean gearDeployRunning = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -85,6 +90,17 @@ public class Robot extends IterativeRobot {
 
         Mission goBack = new Mission(1);
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
+
+        deployGear = new Mission(6);
+        deployGear.add(commandFactory.moveStraight(false, 0, 0));
+        deployGear.add(commandFactory.alignWithVision());
+        deployGear.add(commandFactory.wait(0.4));
+        deployGear.add(commandFactory.setGearPiston(true));
+        deployGear.add(commandFactory.wait(0.5));
+        deployGear.add(commandFactory.moveStraight(-1, 0.3));
+        deployGear.add(commandFactory.setGearPiston(false));
+        deployGear.add(commandFactory.moveStraight(true, 0, 0));
+        missionChooser.addObject("deploy gear", deployGear);
 
         missionChooser.addObject("goBack", goBack);
         SmartDashboard.putData("auto mission", missionChooser);
@@ -133,6 +149,23 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         if (missionSendable.run() && missionChooser.getSelected().getID() != 3) {
+            return;
+        }
+
+        boolean gearDeployButton = driverLeft.getTrigger();
+        if (gearDeployButton != gearDeployButtonPressed) {
+            gearDeployButtonPressed = gearDeployButton;
+            if (gearDeployButton) {
+                deployGear.reset();
+                gearDeployRunning = true;
+            } else {
+                gearDeployRunning = false;
+            }
+        }
+
+
+        if (gearDeployRunning) {
+            gearDeployRunning = !deployGear.run();
             return;
         }
 
