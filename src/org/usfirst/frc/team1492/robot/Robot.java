@@ -91,13 +91,17 @@ public class Robot extends IterativeRobot {
         Mission goBack = new Mission(1);
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
 
+        Mission visionTest = new Mission(3);
+        visionTest.add(commandFactory.alignWithVision(true));
+        missionChooser.addObject("Vision Test", visionTest);
+
         deployGear = new Mission(6);
         deployGear.add(commandFactory.moveStraight(false, 0, 0));
         deployGear.add(commandFactory.alignWithVision());
-        deployGear.add(commandFactory.wait(0.4));
+        deployGear.add(commandFactory.wait(1));
         deployGear.add(commandFactory.setGearPiston(true));
         deployGear.add(commandFactory.wait(0.5));
-        deployGear.add(commandFactory.moveStraight(-1, 0.3));
+        deployGear.add(commandFactory.moveStraight(-1, 0.2));
         deployGear.add(commandFactory.setGearPiston(false));
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
