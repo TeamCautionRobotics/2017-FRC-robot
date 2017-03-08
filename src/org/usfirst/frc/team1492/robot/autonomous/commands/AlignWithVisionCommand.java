@@ -39,7 +39,7 @@ public class AlignWithVisionCommand implements Command {
 
         preferences = Preferences.getInstance();
         // preferences.putDouble("vision/stopY", 100);
-        // preferences.putDouble("vision/base", 0.7);
+        // preferences.putDouble("vision/base", 0.6);
         // preferences.putDouble("vision/gain", 0.8);
         // preferences.putDouble("vision/xOffset", 0.01);
         // preferences.putDouble("vision/theta", 25);
@@ -88,7 +88,7 @@ public class AlignWithVisionCommand implements Command {
                     SmartDashboard.putNumber("trim value", trim);
 
                     double baseSpeed = preferences.getDouble("vision/base", 0.4);
-                    double gain = preferences.getDouble("vision/gain", 0.8);
+                    double gain = preferences.getDouble("vision/gain", 0.6);
 
                     double leftSpeed = baseSpeed + (gain * trim);
                     double rightSpeed = baseSpeed - (gain * trim);

@@ -39,7 +39,7 @@ public class DriveBase implements PIDOutput, PIDSource {
 
         pidController = new PIDController(0.04, 0, 0.1, 0, this, this);
         pidController.setOutputRange(-1, 1);
-        pidController.setAbsoluteTolerance(2);
+        pidController.setAbsoluteTolerance(3);
 
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
