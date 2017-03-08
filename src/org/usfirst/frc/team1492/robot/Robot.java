@@ -128,6 +128,9 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
+        if (missionSendable.run() && missionChooser.getSelected().getID() != 3) {
+            return;
+        }
 
         // The joystick axes are intentionally reversed, so for the joystick the outfeed
         // is the front of the robot.
@@ -177,8 +180,6 @@ public class Robot extends IterativeRobot {
         gearPiston.latchGear(driverRight.getTrigger());
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
-
-        missionSendable.run();
     }
 
     /**

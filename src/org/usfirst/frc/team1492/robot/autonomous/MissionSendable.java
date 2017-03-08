@@ -23,7 +23,7 @@ public class MissionSendable implements NamedSendable {
         missionSupplier = selectedMissionSupplier;
     }
 
-    public void run() {
+    public boolean run() {
         if (running) {
             if (!initialized) {
                 selectedMission = missionSupplier.get();
@@ -32,6 +32,7 @@ public class MissionSendable implements NamedSendable {
                     System.out.println("Teleop mission " + selectedMission.getID() + " Started");
                     initialized = true;
                     finished = false;
+                    return running;
                 } else {
                     running = false;
                     table.putBoolean("running", false);
@@ -52,6 +53,7 @@ public class MissionSendable implements NamedSendable {
             initialized = false;
             finished = true;
         }
+        return running;
     }
 
 
