@@ -3,6 +3,7 @@ package org.usfirst.frc.team1492.robot;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -22,6 +23,8 @@ public class DriveBase implements PIDOutput, PIDSource {
 
     private double heading;
 
+    public PIDController pidController;
+
     public DriveBase(int left, int right, int shifterChannel, int leftA, int leftB, int rightA, int rightB) {
         driveLeft = new VictorSP(left);
         driveRight = new VictorSP(right);
@@ -33,7 +36,11 @@ public class DriveBase implements PIDOutput, PIDSource {
         rightEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
 
         shifter = new Solenoid(shifterChannel);
-        
+
+        pidController = new PIDController(0.04, 0, 0.1, 0, this, this);
+        pidController.setOutputRange(-1, 1);
+        pidController.setAbsoluteTolerance(1);
+
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
         heading = gyro.getAngle();

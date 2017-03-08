@@ -62,6 +62,8 @@ public class Robot extends IterativeRobot {
         driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
         driveBase.useHighGear(false);
 
+        SmartDashboard.putData("Drive PID", driveBase.pidController);
+
         gearPiston = new GearPiston(1);
 
         // TODO: Limit switch for winch
@@ -90,6 +92,7 @@ public class Robot extends IterativeRobot {
 
         Mission goBack = new Mission(1);
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
+        missionChooser.addObject("goBack", goBack);
 
         Mission visionTest = new Mission(3);
         visionTest.add(commandFactory.alignWithVision(true));
@@ -106,9 +109,21 @@ public class Robot extends IterativeRobot {
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
 
-        missionChooser.addObject("goBack", goBack);
-        SmartDashboard.putData("auto mission", missionChooser);
+        Mission turnReset = new Mission(7);
+        turnReset.add(commandFactory.turnInPlace(0.2, 180));
+        turnReset.add(commandFactory.delay(0.3));
+        turnReset.add(commandFactory.resetEncoders());
+        missionChooser.addObject("turn, reset encoders", turnReset);
 
+        Mission encoderReset = new Mission(8);
+        encoderReset.add(commandFactory.resetEncoders());
+        missionChooser.addObject("reset encoders", encoderReset);
+
+        Mission driveForwardPID = new Mission(9);
+        driveForwardPID.add(commandFactory.moveStraightPID(20));
+        missionChooser.addObject("pid drive 20", driveForwardPID);
+
+        SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
         SmartDashboard.putData(missionSendable);
     }
@@ -119,6 +134,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void autonomousInit() {
     	driveBase.resetGyro();
+    	driveBase.resetEncoders();
 
         activeMission = missionChooser.getSelected();
     	
@@ -145,6 +161,8 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
         driveHighGear = false;
         driveBase.useHighGear(false);
+
+        driveBase.resetEncoders();
     }
 
     /**
@@ -152,7 +170,12 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
-        if (missionSendable.run() && missionChooser.getSelected().getID() != 3) {
+        SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
+        SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
+        SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
+
+        if ((missionSendable.run() && missionChooser.getSelected().getID() != 3
+                || driveBase.pidController.isEnabled())) {
             return;
         }
 
@@ -167,10 +190,8 @@ public class Robot extends IterativeRobot {
             }
         }
 
-
         if (gearDeployRunning) {
             gearDeployRunning = !deployGear.run();
-            return;
         }
 
         // The joystick axes are intentionally reversed, so for the joystick the outfeed
