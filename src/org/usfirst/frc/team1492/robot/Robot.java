@@ -65,18 +65,11 @@ public class Robot extends IterativeRobot {
 
         outfeed = new Outfeed(2);
 
-<<<<<<< HEAD
         driverLeft = new EnhancedJoystick(0, 0.1);
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        humanLoadLight = new Relay(0);
-=======
-        driver = new Gamepad(0);
-        manipulator = new Gamepad(1);
-        
         humanLoadLight = new HumanLoadLight(0);
->>>>>>> making human load light object, setting light to fuel if epiglottis up
         
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
         
