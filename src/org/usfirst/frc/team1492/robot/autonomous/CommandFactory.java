@@ -37,7 +37,11 @@ public class CommandFactory {
 	}
 
 	public Command alignWithVision() {
-		return new AlignWithVisionCommand(driveBase);
+		return new AlignWithVisionCommand(driveBase, false);
+	}
+
+	public Command alignWithVision(boolean testing) {
+		return new AlignWithVisionCommand(driveBase, testing);
 	}
 
 	public Command setGearPiston(boolean out) {
