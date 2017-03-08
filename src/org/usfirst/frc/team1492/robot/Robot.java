@@ -120,8 +120,12 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("reset encoders", encoderReset);
 
         Mission driveForwardPID = new Mission(9);
-        driveForwardPID.add(commandFactory.moveStraightPID(20));
-        missionChooser.addObject("pid drive 20", driveForwardPID);
+        driveForwardPID.add(commandFactory.moveStraightPID(80));
+        missionChooser.addObject("pid drive 80", driveForwardPID);
+
+        Mission noMovePID = new Mission(10);
+        noMovePID.add(commandFactory.moveStraightPID(0));
+        missionChooser.addObject("noMovePID", noMovePID);
 
         SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
