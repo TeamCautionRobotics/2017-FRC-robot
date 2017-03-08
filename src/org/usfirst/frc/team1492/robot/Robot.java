@@ -19,6 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+    static {
+        System.loadLibrary("pixy_java");
+    }
+
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
