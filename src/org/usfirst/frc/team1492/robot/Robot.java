@@ -182,21 +182,17 @@ public class Robot extends IterativeRobot {
         gearPiston.latchGear(driverRight.getTrigger());
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
-
-        doors.outfeedOpen(manipulator.getButton(Button.A));
-        doors.epiglottisUp(manipulator.getButton(Button.B));
         
-        if (!manipulator.getButton(Button.B)) {
+        if (epiglottisUp) {
             humanLoadLight.lightOn(LightMode.FUEL);	
         } else {
 	        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5){
-	            humanLoadLight.lightOn(LightMode.FUEL);	
-	        } else if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5) {
 	            humanLoadLight.lightOn(LightMode.GEAR);	
 	        } else {
 	            humanLoadLight.lightOn(LightMode.OFF);	
 	        }
         }
+
         missionSendable.run();
     }
 
