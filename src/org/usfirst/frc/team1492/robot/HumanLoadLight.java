@@ -22,7 +22,7 @@ public class HumanLoadLight {
 				break;
 				
 			case OFF:
-				humanloadlight.set(Relay.Value.kOff);
+				humanloadlight.set(Relay.Value.kOn);
 				break;
 		}
 	}
