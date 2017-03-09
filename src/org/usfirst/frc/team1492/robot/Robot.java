@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
         manipulator = new Gamepad(2);
 
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
-        
+
         Mission testMission = new Mission(0);
         testMission.add(commandFactory.moveStraight(false, 0.4, 2.0));
         testMission.add(commandFactory.turnInPlace(false, 0.4, 50));
@@ -87,12 +87,45 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.delay(1.0));
         testMission.add(commandFactory.moveStraight(false, -0.4, 1.0));
         testMission.add(commandFactory.setGearPiston(false));
-        
         missionChooser.addObject("testMission", testMission);
 
         Mission goBack = new Mission(1);
         goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
         missionChooser.addObject("goBack", goBack);
+
+        Mission missionLeft = new Mission(2);
+        missionLeft.add(commandFactory.moveStraightPID(80));
+        missionLeft.add(commandFactory.turnInPlace(false, 0.4, -50));
+        missionLeft.add(commandFactory.alignWithVision());
+        missionLeft.add(commandFactory.delay(0.4));
+        missionLeft.add(commandFactory.setGearPiston(true));
+        missionLeft.add(commandFactory.delay(1.0));
+        missionLeft.add(commandFactory.moveStraightPID(-50));
+        missionLeft.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission left", missionLeft);
+        
+        Mission missionLeftMove = new Mission(11);
+        missionLeftMove.add(commandFactory.moveStraightPID(80));
+        missionLeftMove.add(commandFactory.turnInPlace(false, 0.4, -50));
+        missionChooser.addObject("mission left move", missionLeftMove);
+
+        Mission missionCenter = new Mission(4);
+        missionCenter.add(commandFactory.alignWithVision());
+        missionCenter.add(commandFactory.setGearPiston(true));
+        missionCenter.add(commandFactory.delay(1.0));
+        missionCenter.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission center", missionCenter);
+
+        Mission missionRight = new Mission(5);
+        missionRight.add(commandFactory.moveStraightPID(80));
+        missionRight.add(commandFactory.turnInPlace(false, 0.4, 50));
+        missionRight.add(commandFactory.alignWithVision());
+        missionRight.add(commandFactory.setGearPiston(true));
+        missionRight.add(commandFactory.delay(1.0));
+        missionRight.add(commandFactory.moveStraight(false, -0.4, 1.0));
+        missionRight.add(commandFactory.moveStraightPID(-50));
+        missionRight.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission right", missionRight);
 
         Mission visionTest = new Mission(3);
         visionTest.add(commandFactory.alignWithVision(true));
@@ -167,6 +200,7 @@ public class Robot extends IterativeRobot {
         driveBase.useHighGear(false);
 
         driveBase.resetEncoders();
+        driveBase.pidController.disable();
     }
 
     /**
@@ -196,6 +230,7 @@ public class Robot extends IterativeRobot {
 
         if (gearDeployRunning) {
             gearDeployRunning = !deployGear.run();
+            return;
         }
 
         // The joystick axes are intentionally reversed, so for the joystick the outfeed
