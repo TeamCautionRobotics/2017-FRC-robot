@@ -2,6 +2,7 @@ package org.usfirst.frc.team1492.robot;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
+import org.usfirst.frc.team1492.robot.HumanLoadLight.LightMode;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
@@ -40,6 +41,8 @@ public class Robot extends IterativeRobot {
     SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
 
     Outfeed outfeed;
+    
+    HumanLoadLight humanLoadLight;
 
     boolean driveHighGear = false;
 
@@ -77,6 +80,8 @@ public class Robot extends IterativeRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
+        humanLoadLight = new HumanLoadLight(0);
+        
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
 
         Mission testMission = new Mission(0);
@@ -281,6 +286,17 @@ public class Robot extends IterativeRobot {
         gearPiston.latchGear(driverRight.getTrigger());
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
+
+        
+        if (epiglottisUp) {
+            humanLoadLight.lightOn(LightMode.FUEL);	
+        } else {
+            if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+                humanLoadLight.lightOn(LightMode.GEAR);
+            } else {
+                humanLoadLight.lightOn(LightMode.OFF);
+            }
+        }
     }
 
     /**
