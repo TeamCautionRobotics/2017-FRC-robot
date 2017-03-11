@@ -31,11 +31,11 @@ public class CommandFactory {
 	}
 	
 	public Command moveStraightPID(double distance) {
-	    return new MoveStraightPIDCommand(driveBase, false, distance);
+	    return new MoveStraightPIDCommand(driveBase, false, 1.0, distance);
 	}
 	
-	public Command moveStraightPID(boolean highGear, double distance) {
-        return new MoveStraightPIDCommand(driveBase, highGear, distance);
+	public Command moveStraightPID(boolean highGear, double maxSpeed, double distance) {
+        return new MoveStraightPIDCommand(driveBase, highGear, maxSpeed, distance);
     }
 
 	

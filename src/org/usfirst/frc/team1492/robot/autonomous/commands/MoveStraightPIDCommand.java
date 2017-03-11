@@ -17,13 +17,14 @@ public class MoveStraightPIDCommand implements Command {
     private boolean needsToStart;
     private boolean complete;
 
-    public MoveStraightPIDCommand(DriveBase driveBase, boolean highGear, double distance) {
+    public MoveStraightPIDCommand(DriveBase driveBase, boolean highGear, double maxSpeed, double distance) {
         this.driveBase = driveBase;
 
         this.highGear = highGear;
         this.distance = distance;
 
         timer = new Timer();
+        driveBase.pidController.setOutputRange(-maxSpeed, maxSpeed);
 
         reset();
     }
