@@ -94,9 +94,9 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("testMission", testMission);
 
-        Mission goBack = new Mission(1);
-        goBack.add(commandFactory.moveStraight(true, -0.4, 3.0));
-        missionChooser.addObject("goBack", goBack);
+        Mission driveForward = new Mission(1);
+        driveForward.add(commandFactory.moveStraightPID(100));
+        missionChooser.addObject("drive forward", driveForward);
 
         Mission missionLeft = new Mission(2);
         missionLeft.add(commandFactory.moveStraightPID(80));
@@ -115,15 +115,32 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission left move", missionLeftMove);
 
         Mission missionCenter = new Mission(4);
-        missionCenter.add(commandFactory.alignWithVision());
+        missionCenter.add(commandFactory.moveStraightPID(false, 0.5, 84));
+        missionCenter.add(commandFactory.moveStraight(false, 0.6, 0.1));
+        missionCenter.add(commandFactory.delay(0.4));
+//        missionCenter.add(commandFactory.alignWithVision());
         missionCenter.add(commandFactory.setGearPiston(true));
-        missionCenter.add(commandFactory.delay(1.0));
+        missionCenter.add(commandFactory.delay(0.8));
+        missionCenter.add(commandFactory.moveStraight(false, -0.4, 1.0));
         missionCenter.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center", missionCenter);
+
+        Mission missionCenterCamera = new Mission(11);
+        missionCenterCamera.add(commandFactory.moveStraightPID(false, 0.4, 55));
+//        missionCenterCamera.add(commandFactory.delay(0.4));
+        missionCenterCamera.add(commandFactory.alignWithVision());
+        missionCenterCamera.add(commandFactory.moveStraight(false, 0.4, 0.5));
+        missionCenterCamera.add(commandFactory.delay(0.3));
+        missionCenterCamera.add(commandFactory.setGearPiston(true));
+        missionCenterCamera.add(commandFactory.delay(0.6));
+        missionCenterCamera.add(commandFactory.moveStraight(false, -0.6, 0.7));
+        missionCenterCamera.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission center camera", missionCenterCamera);
 
         Mission missionRight = new Mission(5);
         missionRight.add(commandFactory.moveStraightPID(80));
         missionRight.add(commandFactory.turnInPlace(false, 0.4, 50));
+        missionRight.add(commandFactory.moveStraightPID(25));
         missionRight.add(commandFactory.alignWithVision());
         missionRight.add(commandFactory.setGearPiston(true));
         missionRight.add(commandFactory.delay(1.0));
@@ -139,11 +156,11 @@ public class Robot extends IterativeRobot {
         deployGear = new Mission(6);
         deployGear.add(commandFactory.moveStraight(false, 0, 0));
         deployGear.add(commandFactory.alignWithVision());
-        deployGear.add(commandFactory.delay(0.7));
-        deployGear.add(commandFactory.setGearPiston(true));
-        deployGear.add(commandFactory.delay(0.5));
-        deployGear.add(commandFactory.moveStraight(-1, 0.2));
-        deployGear.add(commandFactory.setGearPiston(false));
+        deployGear.add(commandFactory.moveStraight(false, 0.4, 0.5));
+//        deployGear.add(commandFactory.setGearPiston(true));
+//        deployGear.add(commandFactory.delay(0.8));
+//        deployGear.add(commandFactory.moveStraight(false, -0.4, 1.0));
+//        deployGear.add(commandFactory.setGearPiston(false));
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
 
@@ -230,11 +247,15 @@ public class Robot extends IterativeRobot {
                 gearDeployRunning = true;
             } else {
                 gearDeployRunning = false;
+                driveBase.pidController.disable();
             }
         }
 
         if (gearDeployRunning) {
             gearDeployRunning = !deployGear.run();
+            if (!gearDeployRunning) {
+                driveBase.pidController.disable();
+            }
             return;
         }
 
