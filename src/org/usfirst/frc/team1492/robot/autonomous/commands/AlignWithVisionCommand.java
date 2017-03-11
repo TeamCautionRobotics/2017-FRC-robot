@@ -40,9 +40,9 @@ public class AlignWithVisionCommand implements Command {
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
 
         preferences = Preferences.getInstance();
-        // preferences.putDouble("vision/stopY", 115);
-        // preferences.putDouble("vision/base", 0.6);
-        // preferences.putDouble("vision/gain", 0.6);
+        // preferences.putDouble("vision/stopY", 108);
+        // preferences.putDouble("vision/base", 0.7);
+        // preferences.putDouble("vision/gain", 0.7);
         // preferences.putDouble("vision/xOffset", 0.02);
         // preferences.putDouble("vision/theta", 25);
 
@@ -56,7 +56,7 @@ public class AlignWithVisionCommand implements Command {
 
             SmartDashboard.putNumber("Number blocks", count);
 
-            stopY = preferences.getDouble("vision/stopY", 115);
+            stopY = preferences.getDouble("vision/stopY", 108);
 
             if (count > 2) {
                 overCount++;
@@ -89,8 +89,8 @@ public class AlignWithVisionCommand implements Command {
                     double trim = ((centerX + offset) * 2) - 1;
                     SmartDashboard.putNumber("trim value", trim);
 
-                    double baseSpeed = preferences.getDouble("vision/base", 0.6);
-                    double gain = preferences.getDouble("vision/gain", 0.6);
+                    double baseSpeed = preferences.getDouble("vision/base", 0.7);
+                    double gain = preferences.getDouble("vision/gain", 0.7);
 
                     double leftSpeed = baseSpeed + (gain * trim);
                     double rightSpeed = baseSpeed - (gain * trim);
