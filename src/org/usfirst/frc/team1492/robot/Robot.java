@@ -115,8 +115,8 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission left move", missionLeftMove);
 
         Mission missionCenter = new Mission(4);
-        missionCenter.add(commandFactory.moveStraightPID(false, 0.5, 84));
-        missionCenter.add(commandFactory.moveStraight(false, 0.6, 0.1));
+        missionCenter.add(commandFactory.moveStraightPID(false, 0.5, 78));
+        missionCenter.add(commandFactory.moveStraight(false, 0.4, 0.7));
         missionCenter.add(commandFactory.delay(0.4));
 //        missionCenter.add(commandFactory.alignWithVision());
         missionCenter.add(commandFactory.setGearPiston(true));
