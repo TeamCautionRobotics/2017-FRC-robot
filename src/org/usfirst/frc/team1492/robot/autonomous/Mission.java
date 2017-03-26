@@ -8,14 +8,14 @@ public class Mission {
 	
 	ArrayList<Command> commands = new ArrayList<Command>();
 
-	private int id;
+	private String name;
 	
-	public Mission(int id) {
-        this.id = id;
+	public Mission(String name) {
+        this.name = name;
 	}
 	
-	public int getID(){
-		return id;
+	public String getName(){
+		return name;
 	}
 
 	public void reset(){
