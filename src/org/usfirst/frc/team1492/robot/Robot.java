@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
         
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
 
-        Mission testMission = new Mission(0);
+        Mission testMission = new Mission("testMission");
         testMission.add(commandFactory.moveStraight(false, 0.4, 2.0));
         testMission.add(commandFactory.turnInPlace(false, 0.4, 50));
         testMission.add(commandFactory.alignWithVision());
@@ -94,11 +94,11 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("testMission", testMission);
 
-        Mission driveForward = new Mission(1);
+        Mission driveForward = new Mission("driveForward");
         driveForward.add(commandFactory.moveStraightPID(100));
         missionChooser.addObject("drive forward", driveForward);
 
-        Mission missionLeft = new Mission(2);
+        Mission missionLeft = new Mission("missionLeft");
         missionLeft.add(commandFactory.moveStraightPID(80));
         missionLeft.add(commandFactory.turnInPlace(false, 0.4, -50));
         missionLeft.add(commandFactory.alignWithVision());
@@ -109,12 +109,12 @@ public class Robot extends IterativeRobot {
         missionLeft.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission left", missionLeft);
         
-        Mission missionLeftMove = new Mission(11);
+        Mission missionLeftMove = new Mission("missionLeftMove");
         missionLeftMove.add(commandFactory.moveStraightPID(80));
         missionLeftMove.add(commandFactory.turnInPlace(false, 0.4, -50));
         missionChooser.addObject("mission left move", missionLeftMove);
 
-        Mission missionCenter = new Mission(4);
+        Mission missionCenter = new Mission("missionCenter");
         missionCenter.add(commandFactory.moveStraightPID(false, 0.5, 78));
         missionCenter.add(commandFactory.moveStraight(false, 0.4, 0.7));
         missionCenter.add(commandFactory.delay(0.4));
@@ -125,7 +125,7 @@ public class Robot extends IterativeRobot {
         missionCenter.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center", missionCenter);
 
-        Mission missionCenterCamera = new Mission(11);
+        Mission missionCenterCamera = new Mission("missionCenterCamera");
         missionCenterCamera.add(commandFactory.moveStraightPID(false, 0.4, 55));
 //        missionCenterCamera.add(commandFactory.delay(0.4));
         missionCenterCamera.add(commandFactory.alignWithVision());
@@ -137,7 +137,7 @@ public class Robot extends IterativeRobot {
         missionCenterCamera.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center camera", missionCenterCamera);
 
-        Mission missionRight = new Mission(5);
+        Mission missionRight = new Mission("missionRight");
         missionRight.add(commandFactory.moveStraightPID(80));
         missionRight.add(commandFactory.turnInPlace(false, 0.4, 50));
         missionRight.add(commandFactory.moveStraightPID(25));
@@ -149,11 +149,11 @@ public class Robot extends IterativeRobot {
         missionRight.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right", missionRight);
 
-        Mission visionTest = new Mission(3);
+        Mission visionTest = new Mission("visionTest");
         visionTest.add(commandFactory.alignWithVision(true));
         missionChooser.addObject("Vision Test", visionTest);
 
-        deployGear = new Mission(6);
+        deployGear = new Mission("deployGear");
         deployGear.add(commandFactory.moveStraight(false, 0, 0));
         deployGear.add(commandFactory.alignWithVision());
         deployGear.add(commandFactory.moveStraight(false, 0.4, 0.5));
@@ -164,21 +164,21 @@ public class Robot extends IterativeRobot {
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
 
-        Mission turnReset = new Mission(7);
+        Mission turnReset = new Mission("turnReset");
         turnReset.add(commandFactory.turnInPlace(0.2, 180));
         turnReset.add(commandFactory.delay(0.3));
         turnReset.add(commandFactory.resetEncoders());
         missionChooser.addObject("turn, reset encoders", turnReset);
 
-        Mission encoderReset = new Mission(8);
+        Mission encoderReset = new Mission("encoderReset");
         encoderReset.add(commandFactory.resetEncoders());
         missionChooser.addObject("reset encoders", encoderReset);
 
-        Mission driveForwardPID = new Mission(9);
+        Mission driveForwardPID = new Mission("driveForwardPID");
         driveForwardPID.add(commandFactory.moveStraightPID(80));
         missionChooser.addObject("pid drive 80", driveForwardPID);
 
-        Mission noMovePID = new Mission(10);
+        Mission noMovePID = new Mission("noMovePID");
         noMovePID.add(commandFactory.moveStraightPID(0));
         missionChooser.addObject("noMovePID", noMovePID);
 
@@ -192,15 +192,15 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
-    	driveBase.resetGyro();
-    	driveBase.resetEncoders();
+        driveBase.resetGyro();
+        driveBase.resetEncoders();
 
         activeMission = missionChooser.getSelected();
-    	
-    	if(activeMission != null){
-    		activeMission.reset();
-			System.out.println("Mission " + activeMission.getID() + " Started");
-    	}
+        
+        if(activeMission != null){
+            activeMission.reset();
+            System.out.println("Mission " + activeMission.getName() + " Started");
+        }
     }
 
     /**
@@ -208,12 +208,12 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
-    	if(activeMission != null){
-    		if(activeMission.run()){
-    			System.out.println("Mission " + activeMission.getID() + " Complete");
-    			activeMission = null;
-    		}
-    	}
+        if(activeMission != null){
+            if(activeMission.run()){
+                System.out.println("Mission " + activeMission.getName() + " Complete");
+                activeMission = null;
+            }
+        }
     }
 
     @Override
@@ -234,7 +234,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
         SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
 
-        if ((missionSendable.run() && missionChooser.getSelected().getID() != 3
+        if ((missionSendable.run() && missionChooser.getSelected().getName() != "visionTest"
                 || driveBase.pidController.isEnabled())) {
             return;
         }
@@ -310,7 +310,7 @@ public class Robot extends IterativeRobot {
 
         
         if (epiglottisUp) {
-            humanLoadLight.lightOn(LightMode.FUEL);	
+            humanLoadLight.lightOn(LightMode.FUEL); 
         } else {
             if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
                 humanLoadLight.lightOn(LightMode.GEAR);
