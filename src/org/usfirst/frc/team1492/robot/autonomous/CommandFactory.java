@@ -6,6 +6,7 @@ import org.usfirst.frc.team1492.robot.GearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.AlignWithVisionCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.DelayCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightDistanceCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightPIDCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.ResetEncoders;
 import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
@@ -27,9 +28,17 @@ public class CommandFactory {
 	}
 	
 	public Command moveStraight(boolean highGear, double speed, double time) {
-		return new MoveStraightCommand(driveBase, highGear, speed, time);
+		return moveStraight(highGear, speed, time, false);
 	}
 	
+	public Command moveStraight(boolean highGear, double speed, double time, boolean keepHeading) {
+        return new MoveStraightCommand(driveBase, highGear, speed, time, keepHeading);
+    }
+	
+	public Command moveStraightDistance(boolean highGear, double speed, double distance, boolean stopAtEnd) {
+	    return new MoveStraightDistanceCommand(driveBase, highGear, speed, distance, stopAtEnd);
+	}
+
 	public Command moveStraightPID(double distance) {
 	    return new MoveStraightPIDCommand(driveBase, false, 1.0, distance);
 	}

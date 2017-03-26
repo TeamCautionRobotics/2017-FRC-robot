@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBase implements PIDOutput, PIDSource {
 
@@ -22,6 +23,7 @@ public class DriveBase implements PIDOutput, PIDSource {
     private ADXRS450_Gyro gyro;
 
     private double heading;
+    public double courseHeading;
 
     public PIDController pidController;
 
@@ -44,6 +46,7 @@ public class DriveBase implements PIDOutput, PIDSource {
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
         heading = gyro.getAngle();
+        courseHeading = heading;
     }
 
     public void drive(double left, double right) {
@@ -83,14 +86,24 @@ public class DriveBase implements PIDOutput, PIDSource {
     public double getRightSpeed() {
         return rightEncoder.getRate();
     }
+    
+    public double getLeftDistance() {
+        return leftEncoder.getDistance();
+    }
+
+    public double getLeftSpeed() {
+        return leftEncoder.getRate();
+    }
 
 
     public void pidInit() {
         heading = getGyroAngle();
+        courseHeading = heading;
     }
 
     @Override
     public void pidWrite(double speed) {
+        SmartDashboard.putNumber("pid drive speed", speed);
         double angle = heading - getGyroAngle();
         drive(speed, speed - angle * 0.03);
     }
