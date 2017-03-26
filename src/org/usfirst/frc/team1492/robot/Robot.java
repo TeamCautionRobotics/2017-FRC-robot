@@ -5,6 +5,7 @@ import org.usfirst.frc.team1492.robot.Gamepad.Button;
 import org.usfirst.frc.team1492.robot.HumanLoadLight.LightMode;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
+import org.usfirst.frc.team1492.robot.autonomous.MissionScript;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -55,6 +56,9 @@ public class Robot extends IterativeRobot {
 
     boolean gearDeployButtonPressed = false;
     boolean gearDeployRunning = false;
+
+    // Just used for the chooser on the SmartDashboard, not actually ever run.
+    private Mission dummyScriptMission;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -181,6 +185,9 @@ public class Robot extends IterativeRobot {
         Mission noMovePID = new Mission(10);
         noMovePID.add(commandFactory.moveStraightPID(0));
         missionChooser.addObject("noMovePID", noMovePID);
+        
+        dummyScriptMission = new Mission(100);
+        missionChooser.addObject("scriptMission", dummyScriptMission);
 
         SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
@@ -196,6 +203,11 @@ public class Robot extends IterativeRobot {
     	driveBase.resetEncoders();
 
         activeMission = missionChooser.getSelected();
+        
+        if(activeMission.getID() == dummyScriptMission.getID()){
+            String script = SmartDashboard.getString("Mission Script", "//Example:\nturnInPlace(0.2, 180)\n");
+            activeMission = MissionScript.parseMission(dummyScriptMission.getID(), script, commandFactory);
+        }
     	
     	if(activeMission != null){
     		activeMission.reset();
