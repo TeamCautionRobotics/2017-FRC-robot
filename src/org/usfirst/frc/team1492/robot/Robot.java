@@ -99,13 +99,17 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("drive forward", driveForward);
 
         Mission missionLeft = new Mission(2);
-        missionLeft.add(commandFactory.moveStraightPID(80));
-        missionLeft.add(commandFactory.turnInPlace(false, 0.4, -50));
-        missionLeft.add(commandFactory.alignWithVision());
-        missionLeft.add(commandFactory.delay(0.4));
+        missionLeft.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
+        missionLeft.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionLeft.add(commandFactory.turnInPlace(false, 0.4, -45));
+        missionLeft.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
+        missionLeft.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+//        missionRight.add(commandFactory.alignWithVision());
+        missionLeft.add(commandFactory.delay(0.6));
         missionLeft.add(commandFactory.setGearPiston(true));
-        missionLeft.add(commandFactory.delay(1.0));
-        missionLeft.add(commandFactory.moveStraightPID(-50));
+        missionLeft.add(commandFactory.delay(0.8));
+        missionLeft.add(commandFactory.moveStraight(false, -0.4, 0.2));
+//        missionRight.add(commandFactory.moveStraightPID(-50));
         missionLeft.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission left", missionLeft);
         
@@ -115,13 +119,14 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission left move", missionLeftMove);
 
         Mission missionCenter = new Mission(4);
-        missionCenter.add(commandFactory.moveStraightPID(false, 0.5, 78));
-        missionCenter.add(commandFactory.moveStraight(false, 0.4, 0.7));
+        missionCenter.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
+        missionCenter.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+//        missionCenter.add(commandFactory.moveStraight(true, 0.2, 0.2, true));
         missionCenter.add(commandFactory.delay(0.4));
 //        missionCenter.add(commandFactory.alignWithVision());
         missionCenter.add(commandFactory.setGearPiston(true));
-        missionCenter.add(commandFactory.delay(0.8));
-        missionCenter.add(commandFactory.moveStraight(false, -0.4, 1.0));
+        missionCenter.add(commandFactory.delay(0.8)); 
+        missionCenter.add(commandFactory.moveStraight(false, -0.4, 0.2));
         missionCenter.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center", missionCenter);
 
@@ -138,14 +143,17 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission center camera", missionCenterCamera);
 
         Mission missionRight = new Mission(5);
-        missionRight.add(commandFactory.moveStraightPID(80));
-        missionRight.add(commandFactory.turnInPlace(false, 0.4, 50));
-        missionRight.add(commandFactory.moveStraightPID(25));
-        missionRight.add(commandFactory.alignWithVision());
+        missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 68, false));
+        missionRight.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionRight.add(commandFactory.turnInPlace(false, 0.4, 47.5));
+        missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
+        missionRight.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+//        missionRight.add(commandFactory.alignWithVision());
+        missionRight.add(commandFactory.delay(0.6));
         missionRight.add(commandFactory.setGearPiston(true));
-        missionRight.add(commandFactory.delay(1.0));
-        missionRight.add(commandFactory.moveStraight(false, -0.4, 1.0));
-        missionRight.add(commandFactory.moveStraightPID(-50));
+        missionRight.add(commandFactory.delay(0.8));
+        missionRight.add(commandFactory.moveStraight(false, -0.4, 0.2));
+//        missionRight.add(commandFactory.moveStraightPID(-50));
         missionRight.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right", missionRight);
 
@@ -208,6 +216,10 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
+        SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
+        SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
+
     	if(activeMission != null){
     		if(activeMission.run()){
     			System.out.println("Mission " + activeMission.getID() + " Complete");
@@ -231,6 +243,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
+        SmartDashboard.putNumber("left encoder", driveBase.getLeftDistance());
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
         SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
 
