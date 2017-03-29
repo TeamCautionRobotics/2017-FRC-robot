@@ -118,6 +118,20 @@ public class Robot extends IterativeRobot {
         missionLeftMove.add(commandFactory.turnInPlace(false, 0.4, -50));
         missionChooser.addObject("mission left move", missionLeftMove);
 
+        Mission missionLeftCamera = new Mission(14);
+        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
+        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionLeftCamera.add(commandFactory.turnInPlace(false, 0.4, -45));
+        missionLeftCamera.add(commandFactory.turnToTarget());
+        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
+        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionLeftCamera.add(commandFactory.delay(0.6));
+        missionLeftCamera.add(commandFactory.setGearPiston(true));
+        missionLeftCamera.add(commandFactory.delay(0.8));
+        missionLeftCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
+        missionLeftCamera.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission left camera", missionLeftCamera);
+
         Mission missionCenter = new Mission(4);
         missionCenter.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
         missionCenter.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
