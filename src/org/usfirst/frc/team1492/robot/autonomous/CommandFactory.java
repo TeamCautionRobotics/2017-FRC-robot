@@ -11,6 +11,7 @@ import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightPIDCommand
 import org.usfirst.frc.team1492.robot.autonomous.commands.ResetEncoders;
 import org.usfirst.frc.team1492.robot.autonomous.commands.SetGearPiston;
 import org.usfirst.frc.team1492.robot.autonomous.commands.TurnInPlaceCommand;
+import org.usfirst.frc.team1492.robot.autonomous.commands.TurnToTargetVisionCommand;
 
 public class CommandFactory {
 	private DriveBase driveBase;
@@ -67,6 +68,14 @@ public class CommandFactory {
 	public Command alignWithVision(boolean testing) {
 		return new AlignWithVisionCommand(driveBase, testing);
 	}
+
+	public Command turnToTarget() {
+        return turnToTarget(false);
+    }
+
+    public Command turnToTarget(boolean testing) {
+        return new TurnToTargetVisionCommand(driveBase, testing);
+    }
 
 	public Command setGearPiston(boolean out) {
 		return new SetGearPiston(gearPiston, out);

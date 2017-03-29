@@ -131,14 +131,15 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission center", missionCenter);
 
         Mission missionCenterCamera = new Mission(11);
-        missionCenterCamera.add(commandFactory.moveStraightPID(false, 0.4, 55));
-//        missionCenterCamera.add(commandFactory.delay(0.4));
-        missionCenterCamera.add(commandFactory.alignWithVision());
-        missionCenterCamera.add(commandFactory.moveStraight(false, 0.4, 0.5));
-        missionCenterCamera.add(commandFactory.delay(0.3));
+        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 30, false));
+        missionCenterCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionCenterCamera.add(commandFactory.turnToTarget());
+        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 25, false));
+        missionCenterCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionCenterCamera.add(commandFactory.delay(0.4));
         missionCenterCamera.add(commandFactory.setGearPiston(true));
-        missionCenterCamera.add(commandFactory.delay(0.6));
-        missionCenterCamera.add(commandFactory.moveStraight(false, -0.6, 0.7));
+        missionCenterCamera.add(commandFactory.delay(0.8));
+        missionCenterCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
         missionCenterCamera.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center camera", missionCenterCamera);
 
@@ -189,6 +190,10 @@ public class Robot extends IterativeRobot {
         Mission noMovePID = new Mission(10);
         noMovePID.add(commandFactory.moveStraightPID(0));
         missionChooser.addObject("noMovePID", noMovePID);
+
+        Mission cameraTurn = new Mission(12);
+        cameraTurn.add(commandFactory.turnToTarget());
+        missionChooser.addObject("turn to target", cameraTurn);
 
         SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
