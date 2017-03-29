@@ -1,21 +1,29 @@
 package org.usfirst.frc.team1492.robot.autonomous;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Mission {
 	
 	int step = 0;
 	
-	ArrayList<Command> commands = new ArrayList<Command>();
+	private ArrayList<Command> commands = new ArrayList<Command>();
 
-	private int id;
+	private String name;
+	public final boolean enableControls;
 	
-	public Mission(int id) {
-        this.id = id;
+	public Mission(String name, boolean enableControls, Command... commands) {
+        this.name = name;
+        this.enableControls = enableControls;
+        this.commands.addAll(Arrays.asList(commands));
 	}
 	
-	public int getID(){
-		return id;
+	public Mission(String name, Command... commands) {
+	    this(name, false, commands);
+	}
+	
+	public String getName(){
+		return name;
 	}
 
 	public void reset(){
