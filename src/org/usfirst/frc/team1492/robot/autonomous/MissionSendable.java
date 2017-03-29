@@ -29,7 +29,7 @@ public class MissionSendable implements NamedSendable {
                 selectedMission = missionSupplier.get();
                 if (selectedMission != null) {
                     selectedMission.reset();
-                    System.out.println("Teleop mission " + selectedMission.getName() + " Started");
+                    System.out.println("Teleop mission '" + selectedMission.getName() + "' Started");
                     initialized = true;
                     finished = false;
                     return running;
@@ -45,11 +45,11 @@ public class MissionSendable implements NamedSendable {
                 running = false;
                 initialized = false;
                 table.putBoolean("running", false);
-                System.out.println("Teleop mission " + selectedMission.getName() + " Completed Successfully");
+                System.out.println("Teleop mission '" + selectedMission.getName() + "' Completed Successfully");
             }
         } else if (!finished) {
             // Not running and not finished: were were cancelled
-            System.out.println("Teleop mission " + selectedMission.getName() + " Cancelled");
+            System.out.println("Teleop mission '" + selectedMission.getName() + "' Cancelled");
             initialized = false;
             finished = true;
         }

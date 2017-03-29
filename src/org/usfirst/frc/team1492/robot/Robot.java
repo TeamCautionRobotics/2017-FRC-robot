@@ -199,7 +199,7 @@ public class Robot extends IterativeRobot {
         
         if(activeMission != null){
             activeMission.reset();
-            System.out.println("Mission " + activeMission.getName() + " Started");
+            System.out.println("Mission '" + activeMission.getName() + "' Started");
         }
     }
 
@@ -210,7 +210,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         if(activeMission != null){
             if(activeMission.run()){
-                System.out.println("Mission " + activeMission.getName() + " Complete");
+                System.out.println("Mission '" + activeMission.getName() + "' Complete");
                 activeMission = null;
             }
         }
