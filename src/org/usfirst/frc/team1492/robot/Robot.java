@@ -147,7 +147,7 @@ public class Robot extends IterativeRobot {
         missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 68, false));
         missionRight.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionRight.add(commandFactory.turnInPlace(false, 0.4, 47.5));
-        missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
+        missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 32.5, false));
         missionRight.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
 //        missionRight.add(commandFactory.alignWithVision());
         missionRight.add(commandFactory.delay(0.6));
@@ -157,6 +157,19 @@ public class Robot extends IterativeRobot {
 //        missionRight.add(commandFactory.moveStraightPID(-50));
         missionRight.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right", missionRight);
+        
+        Mission missionRightCamera = new Mission(13);
+        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 68, false));
+        missionRightCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionRightCamera.add(commandFactory.turnInPlace(false, 0.4, 47.5));
+        missionRightCamera.add(commandFactory.turnToTarget());
+        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 32.5, true));
+        missionRightCamera.add(commandFactory.delay(0.6));
+        missionRightCamera.add(commandFactory.setGearPiston(true));
+        missionRightCamera.add(commandFactory.delay(0.8));
+        missionRightCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
+        missionRightCamera.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission right", missionRightCamera);
 
         Mission visionTest = new Mission(3);
         visionTest.add(commandFactory.alignWithVision(true));
