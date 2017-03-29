@@ -183,7 +183,7 @@ public class Robot extends IterativeRobot {
         missionRightCamera.add(commandFactory.delay(0.8));
         missionRightCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
         missionRightCamera.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission right", missionRightCamera);
+        missionChooser.addObject("mission right camera", missionRightCamera);
 
         Mission visionTest = new Mission(3);
         visionTest.add(commandFactory.alignWithVision(true));
