@@ -233,9 +233,9 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
         SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
-
-        if ((missionSendable.run() && missionChooser.getSelected().getName() != "visionTest"
-                || driveBase.pidController.isEnabled())) {
+ 
+        if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
+                || driveBase.pidController.isEnabled()) {
             return;
         }
 
@@ -310,7 +310,7 @@ public class Robot extends IterativeRobot {
 
         
         if (epiglottisUp) {
-            humanLoadLight.lightOn(LightMode.FUEL); 
+            humanLoadLight.lightOn(LightMode.FUEL);
         } else {
             if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
                 humanLoadLight.lightOn(LightMode.GEAR);
