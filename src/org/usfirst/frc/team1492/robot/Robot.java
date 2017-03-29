@@ -173,11 +173,18 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission right", missionRight);
         
         Mission missionRightCamera = new Mission(13);
-        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 68, false));
+        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 75, false));
         missionRightCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionRightCamera.add(commandFactory.turnInPlace(false, 0.4, 47.5));
+        missionRightCamera.add(commandFactory.turnInPlace(false, 0.4, howManyRoads()));
+        
+        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
+        missionRightCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        
+        missionRightCamera.add(commandFactory.moveStraight(false, 0, 0));
+        missionRightCamera.add(commandFactory.delay(1));
         missionRightCamera.add(commandFactory.turnToTarget());
-        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 32.5, true));
+        missionRightCamera.add(commandFactory.delay(1));
+        missionRightCamera.add(commandFactory.moveStraightDistance(true, 0.4, 15, true));
         missionRightCamera.add(commandFactory.delay(0.6));
         missionRightCamera.add(commandFactory.setGearPiston(true));
         missionRightCamera.add(commandFactory.delay(0.8));
@@ -370,5 +377,9 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void testPeriodic() {}
+
+    public double howManyRoads() {
+        return 42;
+    }
 }
 
