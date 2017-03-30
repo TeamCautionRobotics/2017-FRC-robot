@@ -8,6 +8,7 @@ public class MissionScript {
     
     public static Mission parseMission(int id, List<String> code, CommandFactory factory) {
         Mission mission = new Mission(id);
+        int lineIndex = 0;
         for (String line : code) {
             String lineWithoutComment = line.split("//")[0];
 
@@ -84,11 +85,16 @@ public class MissionScript {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
+            } else if (parenSplit.length == 1) {
+                System.err.format("Failed to find opening parenthesis in line %d, continuing: \"%s\"%n",
+                        lineIndex + 1, lineWithoutComment);
+                continue;
             } else {
-                System.err.println("Failed to find opening parenthesis in line: \""
-                        + lineWithoutComment + "\"");
+                System.err.format("Too many opening parentheses in line %d: \"%s\"", lineIndex + 1,
+                        lineWithoutComment);
                 return null;
             }
+            lineIndex++;
         }
         return mission;
     }
