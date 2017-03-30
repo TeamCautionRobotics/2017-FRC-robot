@@ -2,13 +2,13 @@ package org.usfirst.frc.team1492.robot.autonomous;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class MissionScript {
     
-    public static Mission parseMission(int id, String code, CommandFactory factory) {
+    public static Mission parseMission(int id, List<String> code, CommandFactory factory) {
         Mission mission = new Mission(id);
-        String[] lines = code.split("\n");
-        for (String line : lines) {
+        for (String line : code) {
             String lineWithoutComment = line.split("//")[0];
 
             String[] parenSplit = lineWithoutComment.split("\\(");

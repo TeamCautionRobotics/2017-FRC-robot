@@ -1,5 +1,12 @@
 package org.usfirst.frc.team1492.robot;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 import org.usfirst.frc.team1492.robot.HumanLoadLight.LightMode;
@@ -204,9 +211,18 @@ public class Robot extends IterativeRobot {
 
         activeMission = missionChooser.getSelected();
         
-        if(activeMission.getID() == dummyScriptMission.getID()){
-            String script = SmartDashboard.getString("Mission Script", "//Example:\nturnInPlace(0.2, 180)\n");
-            activeMission = MissionScript.parseMission(dummyScriptMission.getID(), script, commandFactory);
+        if (activeMission.getID() == dummyScriptMission.getID()) {
+            Path missionFile = Paths.get("/opt/roborio/mission.ms");
+            try {
+                List<String> script = Files.readAllLines(missionFile);
+                activeMission = MissionScript.parseMission(dummyScriptMission.getID(), script, commandFactory);
+            } catch (FileNotFoundException e) {
+                System.err.println("Mission script file not found.");
+                System.err.println("File expected at " + missionFile.toAbsolutePath());
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     	
     	if(activeMission != null){
