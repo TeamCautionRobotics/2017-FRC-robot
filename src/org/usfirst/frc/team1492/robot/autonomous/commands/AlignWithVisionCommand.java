@@ -91,7 +91,7 @@ public class AlignWithVisionCommand implements Command {
                         / (double) pixy.PIXY_MAX_X;
                 double yAvg = (targets[0].getY() + targets[1].getY()) / 2.0;
 
-                if (yAvg > stopY || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
+                if ((!encoderStop && yAvg > stopY) || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
                     driveBase.drive(0);
                     aimed = true;
                     updateTrackingMove("Aimed!!!");
