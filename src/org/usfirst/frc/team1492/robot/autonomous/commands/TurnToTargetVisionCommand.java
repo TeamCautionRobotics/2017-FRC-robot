@@ -32,9 +32,9 @@ public class TurnToTargetVisionCommand implements Command {
         pixy.pixy_cam_set_auto_white_balance((short) 0);
 
         // cam_setECV(64017)
-        pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-        // cam_setECV(40966) for Mk II
-//        pixy.pixy_cam_set_exposure_compensation((short) 6, (short) 160);
+//      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
+      // cam_setECV(25601) for the bright light rings
+      pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 100);
 
         // cam_setWBV(0x884040)
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
@@ -90,18 +90,16 @@ public class TurnToTargetVisionCommand implements Command {
                     double trim = ((centerX + offset) * 2) - 1;
                     SmartDashboard.putNumber("trim value", trim);
 
-                    if (Math.abs(trim) <= aimTolerance) {
-                        aimedCount++;
-                    } else {
-                        aimedCount = 0;
-                    }
-
-                    aimed = aimedCount >= aimCountMin;
-
                     double gain = preferences.getDouble("vision/gain", 0.7);
 
-                    double leftSpeed = (gain * trim);
+                    double leftSpeed = trim < 0 ? -gain : gain;
                     double rightSpeed = -leftSpeed;
+
+                    if (Math.abs(trim) <= aimTolerance) {
+                        aimed = true;
+                        leftSpeed = 0;
+                        rightSpeed = 0;
+                    }
 
                     if (!testing) {
                         driveBase.drive(leftSpeed, rightSpeed);
