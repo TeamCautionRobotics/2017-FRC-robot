@@ -84,6 +84,9 @@ public class Robot extends IterativeRobot {
         
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
 
+        Mission testEncoderVision = new Mission(15);
+        testEncoderVision.add(commandFactory.alignWithVision(30));
+
         Mission testMission = new Mission(0);
         testMission.add(commandFactory.moveStraight(false, 0.4, 2.0));
         testMission.add(commandFactory.turnInPlace(false, 0.4, 50));

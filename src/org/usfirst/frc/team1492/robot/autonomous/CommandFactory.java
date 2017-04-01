@@ -62,11 +62,19 @@ public class CommandFactory {
 	}
 
 	public Command alignWithVision() {
-		return new AlignWithVisionCommand(driveBase, false);
+		return alignWithVision(false);
 	}
 
 	public Command alignWithVision(boolean testing) {
-		return new AlignWithVisionCommand(driveBase, testing);
+		return alignWithVision(testing, false, 0);
+	}
+
+	public Command alignWithVision(double encoderStopDistance) {
+	    return alignWithVision(false, true, encoderStopDistance);
+	}
+
+	public Command alignWithVision(boolean testing, boolean encoderStop, double encoderStopDistance) {
+	    return new AlignWithVisionCommand(driveBase, testing, encoderStop, encoderStopDistance);
 	}
 
 	public Command turnToTarget() {

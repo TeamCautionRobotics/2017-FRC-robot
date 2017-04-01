@@ -19,11 +19,16 @@ public class AlignWithVisionCommand implements Command {
     private Preferences preferences;
     private boolean testing;
     private double stopY;
+    private boolean encoderStop;
+    private double encoderStopDistance;
+    private boolean initialized = false;
 
 
-    public AlignWithVisionCommand(DriveBase driveBase, boolean testing) {
+    public AlignWithVisionCommand(DriveBase driveBase, boolean testing, boolean encoderStop, double encoderStopDistance) {
         this.testing = testing;
         this.driveBase = driveBase;
+        this.encoderStop = encoderStop;
+        this.encoderStopDistance = encoderStopDistance;
 
         blocks = new BlockArray(100);
         pixy.pixy_init();
@@ -51,6 +56,12 @@ public class AlignWithVisionCommand implements Command {
 
     @Override
     public boolean run() {
+        if (!initialized) {
+            if (encoderStop) {
+                driveBase.resetEncoders();
+            }
+            initialized = true;
+        }
         if (pixy.pixy_blocks_are_new() == 1) {
             int count = pixy.pixy_get_blocks(100, blocks);
 
@@ -80,7 +91,7 @@ public class AlignWithVisionCommand implements Command {
                         / (double) pixy.PIXY_MAX_X;
                 double yAvg = (targets[0].getY() + targets[1].getY()) / 2.0;
 
-                if (yAvg > stopY) {
+                if (yAvg > stopY || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
                     driveBase.drive(0);
                     aimed = true;
                     updateTrackingMove("Aimed!!!");
@@ -113,6 +124,7 @@ public class AlignWithVisionCommand implements Command {
         aimed = false;
         overCount = 0;
         updateTrackingMove("reset");
+        initialized = false;
     }
 
     private void showBlocks(Block[] blocks) {
