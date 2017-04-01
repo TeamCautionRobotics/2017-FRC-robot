@@ -2,13 +2,14 @@ package org.usfirst.frc.team1492.robot.autonomous;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.List;
 
 public class MissionScript {
     
-    public static Mission parseMission(int id, List<String> code, CommandFactory factory) {
+    public static Mission parseMission(int id, List<String> code, CommandFactory factory) throws ParseException {
         Mission mission = new Mission(id);
-        int lineIndex = 0;
+        int lineNumber = 1;
         for (String line : code) {
             String lineWithoutComment = line.split("//")[0];
 
@@ -38,9 +39,10 @@ public class MissionScript {
                                 parameterClasses[paramIndex] = double.class;
                                 parameterValues[paramIndex] = Double.parseDouble(parameter);
                             } catch (NumberFormatException e) {
-                                System.err.println("Failed to parse parameter as boolean or double: \""
-                                        + parameter + "\"");
-                                return null;
+                                String exceptionMessage = String.format(
+                                        "Failed to parse parameter as boolean or double on line %d: \"%s\"",
+                                        lineNumber, parameter);
+                                throw new ParseException(e.getMessage(), lineNumber);
                             }
                         }
                         paramIndex++;
@@ -60,22 +62,21 @@ public class MissionScript {
                     Method method = CommandFactory.class.getMethod(name, parameterClasses);
                     
                     Object returnValue = method.invoke(factory, parameterValues);
-                    
-                    if(returnValue == null){
-                        System.err.println("Method returned null when called: " + lineWithoutComment);
-                        return null;
-                    }
-                    
-                    if(!(returnValue instanceof Command)){
-                        System.err.println("Method does not return a Command: " + signature+" : "+method.getReturnType().getName());
-                        return null;
+
+                    if (!(returnValue instanceof Command)) {
+                        String exceptionMessage =
+                                String.format("Method did not return a Command: %s returned: %s",
+                                        signature, returnValue.getClass().getName());
+                        throw new ParseException(exceptionMessage, lineNumber);
                     }
 
                     mission.add((Command)returnValue);
 
                 } catch (NoSuchMethodException e) {
-                    System.err.println("Failed to find method: " + signature + "");
-                    return null;
+                    String exceptionMessage =
+                            String.format("Failed to find method: %s%nFull signature: %s",
+                                    signature, e.getMessage());
+                    throw new ParseException(exceptionMessage, lineNumber);
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -87,14 +88,16 @@ public class MissionScript {
                 }
             } else if (parenSplit.length == 1) {
                 System.err.format("Failed to find opening parenthesis in line %d, continuing: \"%s\"%n",
-                        lineIndex + 1, lineWithoutComment);
+                        lineNumber, lineWithoutComment);
                 continue;
             } else {
-                System.err.format("Too many opening parentheses in line %d: \"%s\"", lineIndex + 1,
-                        lineWithoutComment);
-                return null;
+                String exceptionMessage = String.format("Too many opening parentheses in line %d: \"%s\"",
+                        lineNumber, lineWithoutComment);
+                // Determining the position of the parenthesis is difficult, so we just use the line
+                // number
+                throw new ParseException(exceptionMessage, lineNumber);
             }
-            lineIndex++;
+            lineNumber++;
         }
         return mission;
     }

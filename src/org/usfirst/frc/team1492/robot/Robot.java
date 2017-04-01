@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.List;
 
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
@@ -216,6 +217,9 @@ public class Robot extends IterativeRobot {
             try {
                 List<String> script = Files.readAllLines(missionFile);
                 activeMission = MissionScript.parseMission(dummyScriptMission.getID(), script, commandFactory);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                activeMission = null;
             } catch (FileNotFoundException e) {
                 System.err.println("Mission script file not found.");
                 System.err.println("File expected at " + missionFile.toAbsolutePath());
