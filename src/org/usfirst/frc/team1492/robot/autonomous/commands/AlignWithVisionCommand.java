@@ -31,10 +31,10 @@ public class AlignWithVisionCommand implements Command {
         pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
         pixy.pixy_cam_set_auto_white_balance((short) 0);
 
-        // cam_setECV(64017)
-        pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-        // cam_setECV(40966) for Mk II
-//        pixy.pixy_cam_set_exposure_compensation((short) 6, (short) 160);
+//         cam_setECV(64017)
+//      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
+//       cam_setECV(25601) for the bright light rings
+      pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 100);
 
         // cam_setWBV(0x884040)
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
@@ -56,7 +56,7 @@ public class AlignWithVisionCommand implements Command {
 
             SmartDashboard.putNumber("Number blocks", count);
 
-            stopY = preferences.getDouble("vision/stopY", 108);
+            stopY = preferences.getDouble("vision/stopY", 155);
 
             if (count > 2) {
                 overCount++;
@@ -85,12 +85,12 @@ public class AlignWithVisionCommand implements Command {
                     aimed = true;
                     updateTrackingMove("Aimed!!!");
                 } else {
-                    double offset = preferences.getDouble("vision/xOffset", 0.02);
+                    double offset = preferences.getDouble("vision/xOffset", 0.0);
                     double trim = ((centerX + offset) * 2) - 1;
                     SmartDashboard.putNumber("trim value", trim);
 
-                    double baseSpeed = preferences.getDouble("vision/base", 0.7);
-                    double gain = preferences.getDouble("vision/gain", 0.7);
+                    double baseSpeed = preferences.getDouble("vision/base", 0.5);
+                    double gain = preferences.getDouble("vision/gain", 0.6);
 
                     double leftSpeed = baseSpeed + (gain * trim);
                     double rightSpeed = baseSpeed - (gain * trim);
