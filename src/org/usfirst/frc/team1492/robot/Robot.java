@@ -145,10 +145,10 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission center", missionCenter);
 
         Mission missionCenterCamera = new Mission(11);
-        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 30, false));
+        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 40, false));
         missionCenterCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionCenterCamera.add(commandFactory.turnToTarget());
-        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 25, false));
+        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 20, false));
         missionCenterCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionCenterCamera.add(commandFactory.delay(0.4));
         missionCenterCamera.add(commandFactory.setGearPiston(true));
