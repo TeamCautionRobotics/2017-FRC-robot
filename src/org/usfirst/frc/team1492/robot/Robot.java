@@ -7,6 +7,7 @@ import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -82,6 +83,8 @@ public class Robot extends IterativeRobot {
 
         humanLoadLight = new HumanLoadLight(0);
         
+        CameraServer.getInstance().startAutomaticCapture();
+        
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
 
         Mission testEncoderVision = new Mission(15);
@@ -98,66 +101,47 @@ public class Robot extends IterativeRobot {
         testMission.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("testMission", testMission);
 
-        Mission driveForward = new Mission(1);
-        driveForward.add(commandFactory.moveStraightPID(100));
-        missionChooser.addObject("drive forward", driveForward);
+        Mission crossBaseline = new Mission(20);
+        crossBaseline.add(commandFactory.moveStraightDistance(true, 0.4, 65, false));
+        crossBaseline.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionChooser.addObject("cross baseline mission", crossBaseline);
+//
+//        Mission missionLeftCamera = new Mission(14);
+//        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
+//        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+//        missionLeftCamera.add(commandFactory.turnInPlace(false, 0.4, -45));
+//        missionLeftCamera.add(commandFactory.turnToTarget());
+//        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
+//        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+//        missionLeftCamera.add(commandFactory.delay(0.6));
+//        missionLeftCamera.add(commandFactory.setGearPiston(true));
+//        missionLeftCamera.add(commandFactory.delay(0.8));
+//        missionLeftCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
+//        missionLeftCamera.add(commandFactory.setGearPiston(false));
+//        missionChooser.addObject("mission left camera", missionLeftCamera);
 
-        Mission missionLeft = new Mission(2);
-        missionLeft.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
-        missionLeft.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeft.add(commandFactory.turnInPlace(false, 0.4, -45));
-        missionLeft.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
-        missionLeft.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-//        missionRight.add(commandFactory.alignWithVision());
-        missionLeft.add(commandFactory.delay(0.6));
-        missionLeft.add(commandFactory.setGearPiston(true));
-        missionLeft.add(commandFactory.delay(0.8));
-        missionLeft.add(commandFactory.moveStraight(false, -0.4, 0.2));
-//        missionRight.add(commandFactory.moveStraightPID(-50));
-        missionLeft.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission left", missionLeft);
-        
-        Mission missionLeftMove = new Mission(11);
-        missionLeftMove.add(commandFactory.moveStraightPID(80));
-        missionLeftMove.add(commandFactory.turnInPlace(false, 0.4, -50));
-        missionChooser.addObject("mission left move", missionLeftMove);
-
-        Mission missionLeftCamera = new Mission(14);
-        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
-        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftCamera.add(commandFactory.turnInPlace(false, 0.4, -45));
-        missionLeftCamera.add(commandFactory.turnToTarget());
-        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
-        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftCamera.add(commandFactory.delay(0.6));
-        missionLeftCamera.add(commandFactory.setGearPiston(true));
-        missionLeftCamera.add(commandFactory.delay(0.8));
-        missionLeftCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
-        missionLeftCamera.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission left camera", missionLeftCamera);
-
-        Mission missionCenter = new Mission(4);
-        missionCenter.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
-        missionCenter.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        Mission missionCenterGearNoCamera = new Mission(4);
+        missionCenterGearNoCamera.add(commandFactory.moveStraightDistance(true, 0.4, 65, false));
+        missionCenterGearNoCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
 //        missionCenter.add(commandFactory.moveStraight(true, 0.2, 0.2, true));
-        missionCenter.add(commandFactory.delay(0.4));
+        missionCenterGearNoCamera.add(commandFactory.delay(0.4));
 //        missionCenter.add(commandFactory.alignWithVision());
-        missionCenter.add(commandFactory.setGearPiston(true));
-        missionCenter.add(commandFactory.delay(0.8)); 
-        missionCenter.add(commandFactory.moveStraight(false, -0.4, 0.2));
-        missionCenter.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission center", missionCenter);
+        missionCenterGearNoCamera.add(commandFactory.setGearPiston(true));
+        missionCenterGearNoCamera.add(commandFactory.delay(0.8)); 
+        missionCenterGearNoCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
+        missionCenterGearNoCamera.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission center gear, no camera", missionCenterGearNoCamera);
 
-        Mission missionCenterCamera = new Mission(11);
-        missionCenterCamera.add(commandFactory.moveStraightDistance(true, 0.4, 40, false));
-        missionCenterCamera.add(commandFactory.moveStraight(false, -0.05, 0.1, true));
-        missionCenterCamera.add(commandFactory.alignWithVision());
-        missionCenterCamera.add(commandFactory.delay(0.4));
-        missionCenterCamera.add(commandFactory.setGearPiston(true));
-        missionCenterCamera.add(commandFactory.delay(0.8));
-        missionCenterCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
-        missionCenterCamera.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission center camera", missionCenterCamera);
+        Mission missionCenterGearCamera = new Mission(11);
+        missionCenterGearCamera.add(commandFactory.moveStraightDistance(true, 0.4, 41.75, false));
+        missionCenterGearCamera.add(commandFactory.moveStraight(false, -0.05, 0.1, true));
+        missionCenterGearCamera.add(commandFactory.alignWithVision(34));
+        missionCenterGearCamera.add(commandFactory.delay(0.4));
+        missionCenterGearCamera.add(commandFactory.setGearPiston(true));
+        missionCenterGearCamera.add(commandFactory.delay(0.8));
+        missionCenterGearCamera.add(commandFactory.moveStraight(false, -0.4, 0.4));
+        missionCenterGearCamera.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission center gear with camera", missionCenterGearCamera);
 
         Mission missionRight = new Mission(5);
         missionRight.add(commandFactory.moveStraightDistance(true, 0.4, 68, false));
@@ -175,13 +159,13 @@ public class Robot extends IterativeRobot {
         missionChooser.addObject("mission right", missionRight);
         
         Mission missionRightCameraGear = new Mission(13);
-        missionRightCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 75, false));
+        missionRightCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 82, false));
         missionRightCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionRightCameraGear.add(commandFactory.turnInPlace(false, 0.4, howManyRoads()));
+        missionRightCameraGear.add(commandFactory.turnInPlace(false, 0.4, howManyRoads() + 10));
         missionRightCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
         missionRightCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionRightCameraGear.add(commandFactory.moveStraight(false, 0, 0));
-        missionRightCameraGear.add(commandFactory.alignWithVision());
+        missionRightCameraGear.add(commandFactory.alignWithVision(33));
         missionRightCameraGear.add(commandFactory.delay(0.4));
         missionRightCameraGear.add(commandFactory.setGearPiston(true));
         missionRightCameraGear.add(commandFactory.delay(0.8));
@@ -189,57 +173,57 @@ public class Robot extends IterativeRobot {
         missionRightCameraGear.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right camera with gear", missionRightCameraGear);
         
-        Mission missionRightNoGear = new Mission(16);
-        missionRightNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 75, false));
-        missionRightNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionRightNoGear.add(commandFactory.turnInPlace(false, 0.4, howManyRoads()));
-        missionRightNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
-        missionRightNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionRightNoGear.add(commandFactory.moveStraight(false, 0, 0));
-        missionRightNoGear.add(commandFactory.delay(1));
-        missionRightNoGear.add(commandFactory.turnToTarget());
-        missionRightNoGear.add(commandFactory.delay(1));
+        
+        Mission missionRightNoCameraNoGear = new Mission(16);
+        missionRightNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 82, false));
+        missionRightNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionRightNoCameraNoGear.add(commandFactory.turnInPlace(false, 0.4, howManyRoads() + 10));
+        missionRightNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
+        missionRightNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionRightNoCameraNoGear.add(commandFactory.moveStraight(false, 0, 0));
+        missionRightNoCameraNoGear.add(commandFactory.delay(1));
 //        missionRightCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, true));
 //        missionRightCameraNoGear.add(commandFactory.delay(0.6));
 //        missionRightCameraNoGear.add(commandFactory.setGearPiston(true));
 //        missionRightCameraNoGear.add(commandFactory.delay(0.8));
 //        missionRightCameraNoGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
 //        missionRightCameraNoGear.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission right camera, no gear", missionRightNoGear);
+        missionChooser.addObject("mission right no camera, no gear", missionRightNoCameraNoGear);
         
-        Mission missionLeftCameraGear = new Mission(17);
-        missionLeftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 75, false));
-        missionLeftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftCameraGear.add(commandFactory.turnInPlace(false, 0.4, -(howManyRoads() + 13)));
-        missionLeftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
-        missionLeftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftCameraGear.add(commandFactory.moveStraight(false, 0, 0));
-        missionLeftCameraGear.add(commandFactory.alignWithVision());
-        missionLeftCameraGear.add(commandFactory.delay(0.4));
-        missionLeftCameraGear.add(commandFactory.setGearPiston(true));
-        missionLeftCameraGear.add(commandFactory.delay(0.8));
-        missionLeftCameraGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
-        missionLeftCameraGear.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission left camera with gear", missionLeftCameraGear);
+        Mission missionleftCameraGear = new Mission(17);
+        missionleftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 72, false));
+        missionleftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionleftCameraGear.add(commandFactory.turnInPlace(false, 0.4, -(howManyRoads() + 12)));
+        missionleftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
+        missionleftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionleftCameraGear.add(commandFactory.moveStraight(false, 0, 0));
+        missionleftCameraGear.add(commandFactory.alignWithVision(25));
+        missionleftCameraGear.add(commandFactory.delay(0.4));
+        missionleftCameraGear.add(commandFactory.setGearPiston(true));
+        missionleftCameraGear.add(commandFactory.delay(0.8));
+        missionleftCameraGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
+        missionleftCameraGear.add(commandFactory.setGearPiston(false));
+        missionChooser.addObject("mission left camera with gear", missionleftCameraGear);
         
-        Mission missionLeftNoGear = new Mission(18);
-        missionLeftNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 75, false));
-        missionLeftNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftNoGear.add(commandFactory.turnInPlace(false, 0.4, -howManyRoads()));
-        missionLeftNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
-        missionLeftNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-        missionLeftNoGear.add(commandFactory.moveStraight(false, 0, 0));
-        missionLeftNoGear.add(commandFactory.delay(1));
-        missionLeftNoGear.add(commandFactory.turnToTarget());
-        missionLeftNoGear.add(commandFactory.delay(1));
+        Mission missionLeftNoCameraNoGear = new Mission(18);
+        missionLeftNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 72, false));
+        missionLeftNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionLeftNoCameraNoGear.add(commandFactory.turnInPlace(false, 0.4, -(howManyRoads() + 12)));
+        missionLeftNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
+        missionLeftNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
+        missionLeftNoCameraNoGear.add(commandFactory.moveStraight(false, 0, 0));
+        missionLeftNoCameraNoGear.add(commandFactory.delay(1));
 //        missionLeftCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, true));
 //        missionLeftCameraNoGear.add(commandFactory.delay(0.6));
 //        missionLeftCameraNoGear.add(commandFactory.setGearPiston(true));
 //        missionLeftCameraNoGear.add(commandFactory.delay(0.8));
-//        missionLeftCameraNoGear.add(commandFactory.moveStraight(false, -0.4, 0.2));
+//        missionLeftCameraNoGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
 //        missionLeftCameraNoGear.add(commandFactory.setGearPiston(false));
-        missionChooser.addObject("mission left camera, no gear", missionLeftNoGear);
+        missionChooser.addObject("mission left no camera, no gear", missionLeftNoCameraNoGear);
         
+        Mission doNothing = new Mission(30);
+        missionChooser.addObject("Do nothing", doNothing);
+                
         Mission visionTest = new Mission(3);
         visionTest.add(commandFactory.alignWithVision(true));
         missionChooser.addObject("Vision Test", visionTest);
