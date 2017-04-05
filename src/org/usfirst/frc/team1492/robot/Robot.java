@@ -239,7 +239,6 @@ public class Robot extends IterativeRobot {
         deployGear.add(commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
 
-        deployGear = visionTest;
         
         Mission turnReset = new Mission(7);
         turnReset.add(commandFactory.turnInPlace(0.2, 180));
