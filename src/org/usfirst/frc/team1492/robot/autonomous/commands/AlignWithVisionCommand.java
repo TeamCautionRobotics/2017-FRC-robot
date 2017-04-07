@@ -38,8 +38,8 @@ public class AlignWithVisionCommand implements Command {
 
 //         cam_setECV(64017)
 //      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-//       cam_setECV(25601) for the bright light rings
-      pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 100);
+//       cam_setECV(20481) for the bright light rings
+        pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 80);
 
         // cam_setWBV(0x884040)
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
