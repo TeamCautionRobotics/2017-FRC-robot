@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1492.robot.autonomous.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.usfirst.frc.team1492.robot.Block;
 import org.usfirst.frc.team1492.robot.BlockArray;
 import org.usfirst.frc.team1492.robot.DriveBase;
@@ -75,13 +79,15 @@ public class AlignWithVisionCommand implements Command {
                 SmartDashboard.putNumber("over count", overCount);
             }
 
-            if (count >= 2) {
+            Block[] targets = pickTargets(blocks, count);
+
+            if (targets != null) {
                 if (!locked && !aimed) {
                     updateTrackingMove("locked");
                     locked = true;
                 }
 
-                Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
+//                Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
 
                 showBlocks(targets);
 
@@ -112,7 +118,17 @@ public class AlignWithVisionCommand implements Command {
                 }
 
             } else {
-                driveBase.drive(0);
+                // When using encoders, make sure to stop if target is lost
+                if (encoderStop && driveBase.getDistance() >= encoderStopDistance) {
+                    driveBase.drive(0);
+                    aimed = true;
+                    updateTrackingMove("Aimed no-target!!!");
+                }
+                if (!aimed && locked) {
+                    // keep driving
+                } else {
+                    driveBase.drive(0);
+                }
             }
         }
         return testing ? false : aimed;
@@ -125,6 +141,38 @@ public class AlignWithVisionCommand implements Command {
         overCount = 0;
         updateTrackingMove("reset");
         initialized = false;
+    }
+
+    private Block[] pickTargets(BlockArray blocks, int blockCount) {
+        if (blockCount < 2) {
+            return null;
+        } else if (blockCount == 2) {
+            return new Block[] {blocks.getitem(0), blocks.getitem(1)};
+        } else if (blockCount > 2) {
+            System.out.println("[vision] blocks over 2");
+            ArrayList<Block> targets = new ArrayList<>();
+                for (int i = 0; i < blockCount; i++) {
+                    targets.add(blocks.getitem(i));
+            }
+
+            Collections.sort(targets, new Comparator<Block>() {
+                @Override
+                public int compare(Block o1, Block o2) {
+//                    int firstArea = o1.getX() * o1.getY();
+//                    int secondArea = o2.getX() * o2.getY();
+//                    return Integer.compare(firstArea, secondArea);
+                    return Integer.compare(o1.getX(), o2.getX());
+                }
+            });
+
+            for (int i = 0; i < targets.size(); i++) {
+                System.out.print("target " +i + " x is " + targets.get(i).getX() + " ");
+            }
+            System.out.println("");
+//            return targets.subList(0, 2).toArray(new Block[2]);
+            return new Block[] {targets.get(0), targets.get(targets.size() - 1)};
+        }
+        return null;
     }
 
     private void showBlocks(Block[] blocks) {
