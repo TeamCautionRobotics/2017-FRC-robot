@@ -172,7 +172,7 @@ public class Robot extends IterativeRobot {
         missionleftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, false));
         missionleftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionleftCameraGear.add(commandFactory.moveStraight(false, 0, 0));
-        missionleftCameraGear.add(commandFactory.alignWithVision(25));
+        missionleftCameraGear.add(commandFactory.alignWithVision(28));
         missionleftCameraGear.add(commandFactory.delay(0.4));
         missionleftCameraGear.add(commandFactory.setGearPiston(true));
         missionleftCameraGear.add(commandFactory.delay(0.8));
