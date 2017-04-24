@@ -1,9 +1,5 @@
 package org.usfirst.frc.team1492.robot.autonomous.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import org.usfirst.frc.team1492.robot.Block;
 import org.usfirst.frc.team1492.robot.BlockArray;
 import org.usfirst.frc.team1492.robot.DriveBase;
@@ -13,7 +9,7 @@ import org.usfirst.frc.team1492.robot.autonomous.Command;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class AlignWithVisionCommand implements Command {
+public class TurnToTargetVisionCommand implements Command {
 
     private DriveBase driveBase;
     private BlockArray blocks = new BlockArray(100);
@@ -22,17 +18,12 @@ public class AlignWithVisionCommand implements Command {
     private int overCount = 0;
     private Preferences preferences;
     private boolean testing;
-    private double stopY;
-    private boolean encoderStop;
-    private double encoderStopDistance;
-    private boolean initialized = false;
+    private int aimedCount;
 
 
-    public AlignWithVisionCommand(DriveBase driveBase, boolean testing, boolean encoderStop, double encoderStopDistance) {
+    public TurnToTargetVisionCommand(DriveBase driveBase, boolean testing) {
         this.testing = testing;
         this.driveBase = driveBase;
-        this.encoderStop = encoderStop;
-        this.encoderStopDistance = encoderStopDistance;
 
         blocks = new BlockArray(100);
         pixy.pixy_init();
@@ -40,38 +31,34 @@ public class AlignWithVisionCommand implements Command {
         pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
         pixy.pixy_cam_set_auto_white_balance((short) 0);
 
-//         cam_setECV(64017)
+        // cam_setECV(64017)
 //      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-//       cam_setECV(20481) for the bright light rings
-        pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 80);
+      // cam_setECV(25601) for the bright light rings
+      pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 100);
 
         // cam_setWBV(0x884040)
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
 
         preferences = Preferences.getInstance();
-        // preferences.putDouble("vision/stopY", 108);
-        // preferences.putDouble("vision/base", 0.7);
         // preferences.putDouble("vision/gain", 0.7);
         // preferences.putDouble("vision/xOffset", 0.02);
         // preferences.putDouble("vision/theta", 25);
+//        preferences.putDouble("vision/aimTolerance", 0.01);
+//        preferences.putDouble("vision/aimCountMin", 3);
 
         updateTrackingMove("constructed");
     }
 
     @Override
     public boolean run() {
-        if (!initialized) {
-            if (encoderStop) {
-                driveBase.resetEncoders();
-            }
-            initialized = true;
-        }
         if (pixy.pixy_blocks_are_new() == 1) {
             int count = pixy.pixy_get_blocks(100, blocks);
 
             SmartDashboard.putNumber("Number blocks", count);
 
-            stopY = preferences.getDouble("vision/stopY", 155);
+            double aimTolerance = preferences.getDouble("vision/aimTolerance", 0.01);
+            double aimCountMin = preferences.getDouble("vision/aimCountMin", 3);
+
 
             if (count > 2) {
                 overCount++;
@@ -79,15 +66,13 @@ public class AlignWithVisionCommand implements Command {
                 SmartDashboard.putNumber("over count", overCount);
             }
 
-            Block[] targets = pickTargets(blocks, count);
-
-            if (targets != null) {
+            if (count >= 2) {
                 if (!locked && !aimed) {
                     updateTrackingMove("locked");
                     locked = true;
                 }
 
-//                Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
+                Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
 
                 showBlocks(targets);
 
@@ -97,20 +82,24 @@ public class AlignWithVisionCommand implements Command {
                         / (double) pixy.PIXY_MAX_X;
                 double yAvg = (targets[0].getY() + targets[1].getY()) / 2.0;
 
-                if ((!encoderStop && yAvg > stopY) || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
+                if (aimed) {
                     driveBase.drive(0);
-                    aimed = true;
                     updateTrackingMove("Aimed!!!");
                 } else {
-                    double offset = preferences.getDouble("vision/xOffset", 0.0);
+                    double offset = preferences.getDouble("vision/xOffset", 0.00);
                     double trim = ((centerX + offset) * 2) - 1;
                     SmartDashboard.putNumber("trim value", trim);
 
-                    double baseSpeed = preferences.getDouble("vision/base", 0.5);
-                    double gain = preferences.getDouble("vision/gain", 0.6);
+                    double gain = preferences.getDouble("vision/gain", 0.7);
 
-                    double leftSpeed = baseSpeed + (gain * trim);
-                    double rightSpeed = baseSpeed - (gain * trim);
+                    double leftSpeed = trim < 0 ? -gain : gain;
+                    double rightSpeed = -leftSpeed;
+
+                    if (Math.abs(trim) <= aimTolerance) {
+                        aimed = true;
+                        leftSpeed = 0;
+                        rightSpeed = 0;
+                    }
 
                     if (!testing) {
                         driveBase.drive(leftSpeed, rightSpeed);
@@ -118,17 +107,7 @@ public class AlignWithVisionCommand implements Command {
                 }
 
             } else {
-                // When using encoders, make sure to stop if target is lost
-                if (encoderStop && driveBase.getDistance() >= encoderStopDistance) {
-                    driveBase.drive(0);
-                    aimed = true;
-                    updateTrackingMove("Aimed no-target!!!");
-                }
-                if (!aimed && locked) {
-                    // keep driving
-                } else {
-                    driveBase.drive(0);
-                }
+                driveBase.drive(0);
             }
         }
         return testing ? false : aimed;
@@ -139,40 +118,8 @@ public class AlignWithVisionCommand implements Command {
         locked = false;
         aimed = false;
         overCount = 0;
+        aimedCount = 0;
         updateTrackingMove("reset");
-        initialized = false;
-    }
-
-    private Block[] pickTargets(BlockArray blocks, int blockCount) {
-        if (blockCount < 2) {
-            return null;
-        } else if (blockCount == 2) {
-            return new Block[] {blocks.getitem(0), blocks.getitem(1)};
-        } else if (blockCount > 2) {
-            System.out.println("[vision] blocks over 2");
-            ArrayList<Block> targets = new ArrayList<>();
-                for (int i = 0; i < blockCount; i++) {
-                    targets.add(blocks.getitem(i));
-            }
-
-            Collections.sort(targets, new Comparator<Block>() {
-                @Override
-                public int compare(Block o1, Block o2) {
-//                    int firstArea = o1.getX() * o1.getY();
-//                    int secondArea = o2.getX() * o2.getY();
-//                    return Integer.compare(firstArea, secondArea);
-                    return Integer.compare(o1.getX(), o2.getX());
-                }
-            });
-
-            for (int i = 0; i < targets.size(); i++) {
-                System.out.print("target " +i + " x is " + targets.get(i).getX() + " ");
-            }
-            System.out.println("");
-//            return targets.subList(0, 2).toArray(new Block[2]);
-            return new Block[] {targets.get(0), targets.get(targets.size() - 1)};
-        }
-        return null;
     }
 
     private void showBlocks(Block[] blocks) {
