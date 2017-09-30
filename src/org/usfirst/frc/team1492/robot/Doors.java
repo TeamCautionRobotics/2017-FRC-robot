@@ -14,8 +14,8 @@ public class Doors {
         infeed = new Solenoid(infeedChannel);
     }
 
-    public void epiglottisUp(boolean down) {
-        epiglottis.set(down);
+    public void epiglottisUp(boolean up) {
+        epiglottis.set(up);
     }
 
     public void outfeedOpen(boolean open) {
