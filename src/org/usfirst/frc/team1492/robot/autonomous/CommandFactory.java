@@ -14,70 +14,70 @@ import org.usfirst.frc.team1492.robot.autonomous.commands.TurnInPlaceCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.TurnToTargetVisionCommand;
 
 public class CommandFactory {
-	private DriveBase driveBase;
-	private GearPiston gearPiston;
-	private Doors doors;
-	
-	public CommandFactory(DriveBase driveBase, GearPiston gearPiston, Doors doors) {
-		this.driveBase = driveBase;
-		this.gearPiston = gearPiston;
-		this.doors = doors;
-	}
-	
-	public Command moveStraight(double speed, double time) {
-	    return moveStraight(false, speed, time);
-	}
-	
-	public Command moveStraight(boolean highGear, double speed, double time) {
-		return moveStraight(highGear, speed, time, false);
-	}
-	
-	public Command moveStraight(boolean highGear, double speed, double time, boolean keepHeading) {
+    private DriveBase driveBase;
+    private GearPiston gearPiston;
+    private Doors doors;
+
+    public CommandFactory(DriveBase driveBase, GearPiston gearPiston, Doors doors) {
+        this.driveBase = driveBase;
+        this.gearPiston = gearPiston;
+        this.doors = doors;
+    }
+
+    public Command moveStraight(double speed, double time) {
+        return moveStraight(false, speed, time);
+    }
+
+    public Command moveStraight(boolean highGear, double speed, double time) {
+        return moveStraight(highGear, speed, time, false);
+    }
+
+    public Command moveStraight(boolean highGear, double speed, double time, boolean keepHeading) {
         return new MoveStraightCommand(driveBase, highGear, speed, time, keepHeading);
     }
-	
-	public Command moveStraightDistance(boolean highGear, double speed, double distance, boolean stopAtEnd) {
-	    return new MoveStraightDistanceCommand(driveBase, highGear, speed, distance, stopAtEnd);
-	}
 
-	public Command moveStraightPID(double distance) {
-	    return new MoveStraightPIDCommand(driveBase, false, 1.0, distance);
-	}
-	
-	public Command moveStraightPID(boolean highGear, double maxSpeed, double distance) {
+    public Command moveStraightDistance(boolean highGear, double speed, double distance,
+            boolean stopAtEnd) {
+        return new MoveStraightDistanceCommand(driveBase, highGear, speed, distance, stopAtEnd);
+    }
+
+    public Command moveStraightPID(double distance) {
+        return new MoveStraightPIDCommand(driveBase, false, 1.0, distance);
+    }
+
+    public Command moveStraightPID(boolean highGear, double maxSpeed, double distance) {
         return new MoveStraightPIDCommand(driveBase, highGear, maxSpeed, distance);
     }
 
-	
-	public Command turnInPlace(double speed, double targetAngle) {
-	    return turnInPlace(false, speed, targetAngle);
-	}
-	
-	public Command turnInPlace(boolean highGear, double speed, double targetAngle) {
-		return new TurnInPlaceCommand(driveBase, highGear, speed, targetAngle);
-	}
+    public Command turnInPlace(double speed, double targetAngle) {
+        return turnInPlace(false, speed, targetAngle);
+    }
 
-	public Command resetEncoders() {
-	    return new ResetEncoders(driveBase);
-	}
+    public Command turnInPlace(boolean highGear, double speed, double targetAngle) {
+        return new TurnInPlaceCommand(driveBase, highGear, speed, targetAngle);
+    }
 
-	public Command alignWithVision() {
-		return alignWithVision(false);
-	}
+    public Command resetEncoders() {
+        return new ResetEncoders(driveBase);
+    }
 
-	public Command alignWithVision(boolean testing) {
-		return alignWithVision(testing, false, 0);
-	}
+    public Command alignWithVision() {
+        return alignWithVision(false);
+    }
 
-	public Command alignWithVision(double encoderStopDistance) {
-	    return alignWithVision(false, true, encoderStopDistance);
-	}
+    public Command alignWithVision(boolean testing) {
+        return alignWithVision(testing, false, 0);
+    }
 
-	public Command alignWithVision(boolean testing, boolean encoderStop, double encoderStopDistance) {
-	    return new AlignWithVisionCommand(driveBase, testing, encoderStop, encoderStopDistance);
-	}
+    public Command alignWithVision(double encoderStopDistance) {
+        return alignWithVision(false, true, encoderStopDistance);
+    }
 
-	public Command turnToTarget() {
+    public Command alignWithVision(boolean testing, boolean encoderStop, double encoderStopDistance) {
+        return new AlignWithVisionCommand(driveBase, testing, encoderStop, encoderStopDistance);
+    }
+
+    public Command turnToTarget() {
         return turnToTarget(false);
     }
 
@@ -85,12 +85,12 @@ public class CommandFactory {
         return new TurnToTargetVisionCommand(driveBase, testing);
     }
 
-	public Command setGearPiston(boolean out) {
-		return new SetGearPiston(gearPiston, out);
-	}
+    public Command setGearPiston(boolean out) {
+        return new SetGearPiston(gearPiston, out);
+    }
 
-	public Command delay(double time) {
-		return new DelayCommand(time);
-	}
+    public Command delay(double time) {
+        return new DelayCommand(time);
+    }
 
 }
