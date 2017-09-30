@@ -18,8 +18,6 @@ public class TurnToTargetVisionCommand implements Command {
     private int overCount = 0;
     private Preferences preferences;
     private boolean testing;
-    private int aimedCount;
-
 
     public TurnToTargetVisionCommand(DriveBase driveBase, boolean testing) {
         this.testing = testing;
@@ -43,8 +41,8 @@ public class TurnToTargetVisionCommand implements Command {
         // preferences.putDouble("vision/gain", 0.7);
         // preferences.putDouble("vision/xOffset", 0.02);
         // preferences.putDouble("vision/theta", 25);
-//        preferences.putDouble("vision/aimTolerance", 0.01);
-//        preferences.putDouble("vision/aimCountMin", 3);
+        // preferences.putDouble("vision/aimTolerance", 0.01);
+        // preferences.putDouble("vision/aimCountMin", 3);
 
         updateTrackingMove("constructed");
     }
@@ -118,7 +116,6 @@ public class TurnToTargetVisionCommand implements Command {
         locked = false;
         aimed = false;
         overCount = 0;
-        aimedCount = 0;
         updateTrackingMove("reset");
     }
 

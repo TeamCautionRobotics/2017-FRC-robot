@@ -87,7 +87,7 @@ public class AlignWithVisionCommand implements Command {
                     locked = true;
                 }
 
-//                Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
+                // Block[] targets = {blocks.getitem(0), blocks.getitem(1)};
 
                 showBlocks(targets);
 
@@ -97,7 +97,8 @@ public class AlignWithVisionCommand implements Command {
                         / (double) pixy.PIXY_MAX_X;
                 double yAvg = (targets[0].getY() + targets[1].getY()) / 2.0;
 
-                if ((!encoderStop && yAvg > stopY) || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
+                if ((!encoderStop && yAvg > stopY)
+                        || (encoderStop && driveBase.getDistance() >= encoderStopDistance)) {
                     driveBase.drive(0);
                     aimed = true;
                     updateTrackingMove("Aimed!!!");
@@ -151,25 +152,25 @@ public class AlignWithVisionCommand implements Command {
         } else if (blockCount > 2) {
             System.out.println("[vision] blocks over 2");
             ArrayList<Block> targets = new ArrayList<>();
-                for (int i = 0; i < blockCount; i++) {
-                    targets.add(blocks.getitem(i));
+            for (int i = 0; i < blockCount; i++) {
+                targets.add(blocks.getitem(i));
             }
 
             Collections.sort(targets, new Comparator<Block>() {
                 @Override
                 public int compare(Block o1, Block o2) {
-//                    int firstArea = o1.getX() * o1.getY();
-//                    int secondArea = o2.getX() * o2.getY();
-//                    return Integer.compare(firstArea, secondArea);
+                    // int firstArea = o1.getX() * o1.getY();
+                    // int secondArea = o2.getX() * o2.getY();
+                    // return Integer.compare(firstArea, secondArea);
                     return Integer.compare(o1.getX(), o2.getX());
                 }
             });
 
             for (int i = 0; i < targets.size(); i++) {
-                System.out.print("target " +i + " x is " + targets.get(i).getX() + " ");
+                System.out.print("target " + i + " x is " + targets.get(i).getX() + " ");
             }
             System.out.println("");
-//            return targets.subList(0, 2).toArray(new Block[2]);
+            // return targets.subList(0, 2).toArray(new Block[2]);
             return new Block[] {targets.get(0), targets.get(targets.size() - 1)};
         }
         return null;

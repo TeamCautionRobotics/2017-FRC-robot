@@ -3,13 +3,9 @@ package org.usfirst.frc.team1492.robot.autonomous.commands;
 import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.autonomous.Command;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class MoveStraightDistanceCommand implements Command {
 
     private DriveBase driveBase;
-
-    private Timer timer;
 
     private boolean highGear;
     private double speed;
@@ -29,16 +25,12 @@ public class MoveStraightDistanceCommand implements Command {
         this.distance = distance;
         this.stopAtEnd = stopAtEnd;
 
-        timer = new Timer();
-
         reset();
     }
 
     @Override
     public boolean run() {
         if (needsToStart) {
-            // timer.reset();
-            // timer.start();
             driveBase.useHighGear(highGear);
             driveBase.resetEncoders();
             heading = driveBase.getGyroAngle();
@@ -47,9 +39,6 @@ public class MoveStraightDistanceCommand implements Command {
 
             needsToStart = false;
         }
-
-//        complete = Math.abs(driveBase.getDistance()) >= distance;
-        
 
         if (complete) {
             return true;
