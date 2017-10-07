@@ -77,7 +77,7 @@ public class AlignWithVisionCommand implements Command {
 
             if (count > 2) {
                 overCount++;
-                SmartDashboard.putNumber("over", count);
+                SmartDashboard.putNumber("Number blocks while over", count);
                 SmartDashboard.putNumber("over count", overCount);
             }
 
