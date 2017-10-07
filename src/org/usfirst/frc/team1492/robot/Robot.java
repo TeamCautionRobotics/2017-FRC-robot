@@ -235,6 +235,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
+        // duplication is deliberate to see number and graph at the same time
         SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
         SmartDashboard.putNumber("left encoder", driveBase.getLeftDistance());
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
