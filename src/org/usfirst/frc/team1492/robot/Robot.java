@@ -209,6 +209,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        // duplication is deliberate to see number and graph at the same time
         SmartDashboard.putNumber("right encoder", driveBase.getRightDistance());
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
         SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
