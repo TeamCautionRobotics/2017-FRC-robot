@@ -27,7 +27,8 @@ public class DriveBase implements PIDOutput, PIDSource {
 
     public PIDController pidController;
 
-    public DriveBase(int left, int right, int shifterChannel, int leftA, int leftB, int rightA, int rightB) {
+    public DriveBase(int left, int right, int shifterChannel, int leftA, int leftB, int rightA,
+            int rightB) {
         driveLeft = new VictorSP(left);
         driveRight = new VictorSP(right);
 
@@ -86,7 +87,7 @@ public class DriveBase implements PIDOutput, PIDSource {
     public double getRightSpeed() {
         return rightEncoder.getRate();
     }
-    
+
     public double getLeftDistance() {
         return leftEncoder.getDistance();
     }
@@ -110,8 +111,13 @@ public class DriveBase implements PIDOutput, PIDSource {
 
 
     @Override
+    /**
+     * Not implemented. Always displacment pid source.
+     * 
+     * @see edu.wpi.first.wpilibj.PIDSource#setPIDSourceType(edu.wpi.first.wpilibj.PIDSourceType)
+     */
     public void setPIDSourceType(PIDSourceType pidSource) {
-        // TODO Auto-generated method stub
+
     }
 
     @Override

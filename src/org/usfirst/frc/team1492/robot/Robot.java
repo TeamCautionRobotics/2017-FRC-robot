@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
     SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
 
     Outfeed outfeed;
-    
+
     HumanLoadLight humanLoadLight;
 
     boolean driveHighGear = false;
@@ -70,7 +70,6 @@ public class Robot extends IterativeRobot {
 
         gearPiston = new GearPiston(1);
 
-        // TODO: Limit switch for winch
         winch = new Winch(3);
 
         doors = new Doors(2, 3, 4);
@@ -82,9 +81,9 @@ public class Robot extends IterativeRobot {
         manipulator = new Gamepad(2);
 
         humanLoadLight = new HumanLoadLight(0);
-        
+
         CameraServer.getInstance().startAutomaticCapture();
-        
+
         commandFactory = new CommandFactory(driveBase, gearPiston, doors);
 
         Mission testEncoderVision = new Mission("test encoder vision");
@@ -95,29 +94,13 @@ public class Robot extends IterativeRobot {
         crossBaseline.add(commandFactory.moveStraightDistance(true, 0.4, 65, false));
         crossBaseline.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionChooser.addObject("cross baseline mission", crossBaseline);
-//
-//        Mission missionLeftCamera = new Mission(14);
-//        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 60, false));
-//        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-//        missionLeftCamera.add(commandFactory.turnInPlace(false, 0.4, -45));
-//        missionLeftCamera.add(commandFactory.turnToTarget());
-//        missionLeftCamera.add(commandFactory.moveStraightDistance(true, 0.4, 37.5, false));
-//        missionLeftCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-//        missionLeftCamera.add(commandFactory.delay(0.6));
-//        missionLeftCamera.add(commandFactory.setGearPiston(true));
-//        missionLeftCamera.add(commandFactory.delay(0.8));
-//        missionLeftCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
-//        missionLeftCamera.add(commandFactory.setGearPiston(false));
-//        missionChooser.addObject("mission left camera", missionLeftCamera);
 
         Mission missionCenterGearNoCamera = new Mission("center gear encoder");
         missionCenterGearNoCamera.add(commandFactory.moveStraightDistance(true, 0.4, 65, false));
         missionCenterGearNoCamera.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
-//        missionCenter.add(commandFactory.moveStraight(true, 0.2, 0.2, true));
         missionCenterGearNoCamera.add(commandFactory.delay(0.4));
-//        missionCenter.add(commandFactory.alignWithVision());
         missionCenterGearNoCamera.add(commandFactory.setGearPiston(true));
-        missionCenterGearNoCamera.add(commandFactory.delay(0.8)); 
+        missionCenterGearNoCamera.add(commandFactory.delay(0.8));
         missionCenterGearNoCamera.add(commandFactory.moveStraight(false, -0.4, 0.2));
         missionCenterGearNoCamera.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission center gear, no camera", missionCenterGearNoCamera);
@@ -147,8 +130,8 @@ public class Robot extends IterativeRobot {
         missionRightCameraGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
         missionRightCameraGear.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right camera with gear", missionRightCameraGear);
-        
-        
+
+
         Mission missionRightNoCameraNoGear = new Mission("right nogear encoder");
         missionRightNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 82, false));
         missionRightNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
@@ -157,14 +140,8 @@ public class Robot extends IterativeRobot {
         missionRightNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionRightNoCameraNoGear.add(commandFactory.moveStraight(false, 0, 0));
         missionRightNoCameraNoGear.add(commandFactory.delay(1));
-//        missionRightCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, true));
-//        missionRightCameraNoGear.add(commandFactory.delay(0.6));
-//        missionRightCameraNoGear.add(commandFactory.setGearPiston(true));
-//        missionRightCameraNoGear.add(commandFactory.delay(0.8));
-//        missionRightCameraNoGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
-//        missionRightCameraNoGear.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission right no camera, no gear", missionRightNoCameraNoGear);
-        
+
         Mission missionleftCameraGear = new Mission("left gear camera");
         missionleftCameraGear.add(commandFactory.moveStraightDistance(true, 0.4, 72, false));
         missionleftCameraGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
@@ -179,7 +156,7 @@ public class Robot extends IterativeRobot {
         missionleftCameraGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
         missionleftCameraGear.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission left camera with gear", missionleftCameraGear);
-        
+
         Mission missionLeftNoCameraNoGear = new Mission("left nogear encoder");
         missionLeftNoCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 72, false));
         missionLeftNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
@@ -188,30 +165,18 @@ public class Robot extends IterativeRobot {
         missionLeftNoCameraNoGear.add(commandFactory.moveStraight(true, -0.05, 0.1, true));
         missionLeftNoCameraNoGear.add(commandFactory.moveStraight(false, 0, 0));
         missionLeftNoCameraNoGear.add(commandFactory.delay(1));
-//        missionLeftCameraNoGear.add(commandFactory.moveStraightDistance(true, 0.4, 15, true));
-//        missionLeftCameraNoGear.add(commandFactory.delay(0.6));
-//        missionLeftCameraNoGear.add(commandFactory.setGearPiston(true));
-//        missionLeftCameraNoGear.add(commandFactory.delay(0.8));
-//        missionLeftCameraNoGear.add(commandFactory.moveStraight(false, -0.4, 0.4));
-//        missionLeftCameraNoGear.add(commandFactory.setGearPiston(false));
         missionChooser.addObject("mission left no camera, no gear", missionLeftNoCameraNoGear);
-        
+
         Mission doNothing = new Mission("do nothing");
         missionChooser.addObject("Do nothing", doNothing);
-                
+
         Mission visionTest = new Mission("vision test");
         visionTest.add(commandFactory.alignWithVision(true));
         missionChooser.addObject("Vision Test", visionTest);
 
-        deployGear = new Mission("deployGear",
-        commandFactory.moveStraight(false, 0, 0),
-        commandFactory.alignWithVision(),
-        commandFactory.moveStraight(false, 0.4, 0.5),
-//        commandFactory.setGearPiston(true),
-//        commandFactory.delay(0.8),
-//        commandFactory.moveStraight(false, -0.4, 1.0),
-//        commandFactory.setGearPiston(false),
-        commandFactory.moveStraight(true, 0, 0));
+        deployGear = new Mission("deployGear", commandFactory.moveStraight(false, 0, 0),
+                commandFactory.alignWithVision(), commandFactory.moveStraight(false, 0.4, 0.5),
+                commandFactory.moveStraight(true, 0, 0));
         missionChooser.addObject("deploy gear", deployGear);
 
         Mission cameraTurn = new Mission("camera turn to target");
@@ -233,7 +198,7 @@ public class Robot extends IterativeRobot {
 
         activeMission = missionChooser.getSelected();
 
-        if(activeMission != null){
+        if (activeMission != null) {
             activeMission.reset();
             System.out.println("Mission '" + activeMission.getName() + "' Started");
         }
@@ -248,8 +213,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("right encoder num", driveBase.getRightDistance());
         SmartDashboard.putBoolean("pid arrived", driveBase.pidController.onTarget());
 
-        if(activeMission != null){
-            if(activeMission.run()){
+        if (activeMission != null) {
+            if (activeMission.run()) {
                 System.out.println("Mission '" + activeMission.getName() + "' Complete");
                 activeMission = null;
             }
@@ -349,7 +314,7 @@ public class Robot extends IterativeRobot {
 
         outfeed.moveOutfeed(manipulator.getAxis(Axis.RIGHT_Y));
 
-        
+
         if (epiglottisUp) {
             humanLoadLight.lightOn(LightMode.FUEL);
         } else {

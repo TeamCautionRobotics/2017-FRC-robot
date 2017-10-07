@@ -3,13 +3,9 @@ package org.usfirst.frc.team1492.robot.autonomous.commands;
 import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.autonomous.Command;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class MoveStraightPIDCommand implements Command {
 
     private DriveBase driveBase;
-
-    private Timer timer;
 
     private boolean highGear;
     private double distance;
@@ -23,7 +19,6 @@ public class MoveStraightPIDCommand implements Command {
         this.highGear = highGear;
         this.distance = distance;
 
-        timer = new Timer();
         driveBase.pidController.setOutputRange(-maxSpeed, maxSpeed);
 
         reset();
@@ -32,8 +27,6 @@ public class MoveStraightPIDCommand implements Command {
     @Override
     public boolean run() {
         if (needsToStart) {
-            // timer.reset();
-            // timer.start();
             driveBase.useHighGear(highGear);
             driveBase.resetEncoders();
 

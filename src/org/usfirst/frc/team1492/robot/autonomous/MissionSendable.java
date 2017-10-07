@@ -29,7 +29,7 @@ public class MissionSendable implements NamedSendable {
                 selectedMission = missionSupplier.get();
                 if (selectedMission != null) {
                     selectedMission.reset();
-                    System.out.println("Teleop mission '" + selectedMission.getName() + "' Started");
+                    System.out.format("Teleop mission '%s' Started%n", selectedMission.getName());
                     initialized = true;
                     finished = false;
                     return running;
@@ -45,11 +45,11 @@ public class MissionSendable implements NamedSendable {
                 running = false;
                 initialized = false;
                 table.putBoolean("running", false);
-                System.out.println("Teleop mission '" + selectedMission.getName() + "' Completed Successfully");
+                System.out.format("Teleop mission '%s' Completed Successfully%n", selectedMission.getName());
             }
         } else if (!finished) {
             // Not running and not finished: were were cancelled
-            System.out.println("Teleop mission '" + selectedMission.getName() + "' Cancelled");
+            System.out.format("Teleop mission '%s' Cancelled%n", selectedMission.getName());
             initialized = false;
             finished = true;
         }
@@ -59,7 +59,7 @@ public class MissionSendable implements NamedSendable {
 
     private final ITableListener listener = (table, key, value, isNew) -> {
         running = (boolean) value;
-      };
+    };
 
     @Override
     public void initTable(ITable subtable) {
@@ -68,11 +68,13 @@ public class MissionSendable implements NamedSendable {
         }
 
         table = subtable;
-//        if (table != null) {
+        if (table != null) {
         table.putString("name", name);
         table.putBoolean("running", false);
         table.addTableListener("running", listener, false);
-//        }
+        } else {
+            System.err.println("MissionSendable initTable passed null ITable!");
+        }
     }
 
     @Override

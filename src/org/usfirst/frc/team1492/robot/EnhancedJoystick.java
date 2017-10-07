@@ -17,7 +17,7 @@ public class EnhancedJoystick extends Joystick {
 
     /**
      * Get the value of the axis with a deadband applied
-     *
+     * 
      * @param axis The axis to read, starting at 0.
      * @return The value of the axis with the deadband applied.
      */
@@ -25,8 +25,10 @@ public class EnhancedJoystick extends Joystick {
         return deadband(super.getRawAxis(axis));
     }
 
+
     /**
      * Set the size of the deadband.
+     * 
      * @param deadband Size of the deadband. Must be non-negative.
      */
     public void setDeadband(double deadband) {
