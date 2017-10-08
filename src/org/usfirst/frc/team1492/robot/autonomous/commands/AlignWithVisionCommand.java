@@ -1,12 +1,9 @@
 package org.usfirst.frc.team1492.robot.autonomous.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import org.usfirst.frc.team1492.robot.Block;
 import org.usfirst.frc.team1492.robot.BlockArray;
 import org.usfirst.frc.team1492.robot.DriveBase;
+import org.usfirst.frc.team1492.robot.PixyCamera;
 import org.usfirst.frc.team1492.robot.pixy;
 import org.usfirst.frc.team1492.robot.autonomous.Command;
 
@@ -17,6 +14,7 @@ public class AlignWithVisionCommand implements Command {
 
     private DriveBase driveBase;
     private BlockArray blocks = new BlockArray(100);
+    private PixyCamera pixyCamera;
     private boolean locked = false;
     private boolean aimed = false;
     private int overCount = 0;
@@ -28,27 +26,13 @@ public class AlignWithVisionCommand implements Command {
     private boolean initialized = false;
 
 
-    public AlignWithVisionCommand(DriveBase driveBase, boolean testing, boolean encoderStop, double encoderStopDistance) {
+    public AlignWithVisionCommand(DriveBase driveBase, PixyCamera pixyCamera, boolean testing,
+            boolean encoderStop, double encoderStopDistance) {
         this.testing = testing;
         this.driveBase = driveBase;
+        this.pixyCamera = pixyCamera;
         this.encoderStop = encoderStop;
         this.encoderStopDistance = encoderStopDistance;
-
-        blocks = new BlockArray(100);
-        pixy.pixy_init();
-
-        pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
-        pixy.pixy_cam_set_auto_white_balance((short) 0);
-
-//         cam_setECV(64017)
-//      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-//       cam_setECV(20481) for the bright light rings
-//        pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 80);
-//        came_setECV(38402) for bright light rings at workshop
-      pixy.pixy_cam_set_exposure_compensation((short) 2, (short) 150);
-
-        // cam_setWBV(0x884040)
-        pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
 
         preferences = Preferences.getInstance();
         // preferences.putDouble("vision/stopY", 108);
@@ -68,8 +52,8 @@ public class AlignWithVisionCommand implements Command {
             }
             initialized = true;
         }
-        if (pixy.pixy_blocks_are_new() == 1) {
-            int count = pixy.pixy_get_blocks(100, blocks);
+        if (pixyCamera.blocksAreNew()) {
+            int count = pixyCamera.getBlocks(100, blocks);
 
             SmartDashboard.putNumber("Number blocks", count);
 
@@ -81,7 +65,7 @@ public class AlignWithVisionCommand implements Command {
                 SmartDashboard.putNumber("over count", overCount);
             }
 
-            Block[] targets = pickTargets(blocks, count);
+            Block[] targets = PixyCamera.pickBlocks(blocks, count);
 
             if (targets != null) {
                 if (!locked && !aimed) {
@@ -144,38 +128,6 @@ public class AlignWithVisionCommand implements Command {
         overCount = 0;
         updateTrackingMove("reset");
         initialized = false;
-    }
-
-    private Block[] pickTargets(BlockArray blocks, int blockCount) {
-        if (blockCount < 2) {
-            return null;
-        } else if (blockCount == 2) {
-            return new Block[] {blocks.getitem(0), blocks.getitem(1)};
-        } else if (blockCount > 2) {
-            System.out.println("[vision] blocks over 2");
-            ArrayList<Block> targets = new ArrayList<>();
-            for (int i = 0; i < blockCount; i++) {
-                targets.add(blocks.getitem(i));
-            }
-
-            Collections.sort(targets, new Comparator<Block>() {
-                @Override
-                public int compare(Block o1, Block o2) {
-                    // int firstArea = o1.getX() * o1.getY();
-                    // int secondArea = o2.getX() * o2.getY();
-                    // return Integer.compare(firstArea, secondArea);
-                    return Integer.compare(o1.getX(), o2.getX());
-                }
-            });
-
-            for (int i = 0; i < targets.size(); i++) {
-                System.out.print("target " + i + " x is " + targets.get(i).getX() + " ");
-            }
-            System.out.println("");
-            // return targets.subList(0, 2).toArray(new Block[2]);
-            return new Block[] {targets.get(0), targets.get(targets.size() - 1)};
-        }
-        return null;
     }
 
     private void showBlocks(Block[] blocks) {

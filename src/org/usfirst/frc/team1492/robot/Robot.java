@@ -3,6 +3,7 @@ package org.usfirst.frc.team1492.robot;
 import org.usfirst.frc.team1492.robot.Gamepad.Axis;
 import org.usfirst.frc.team1492.robot.Gamepad.Button;
 import org.usfirst.frc.team1492.robot.HumanLoadLight.LightMode;
+import org.usfirst.frc.team1492.robot.PixyCamera.CameraSettings;
 import org.usfirst.frc.team1492.robot.autonomous.CommandFactory;
 import org.usfirst.frc.team1492.robot.autonomous.Mission;
 import org.usfirst.frc.team1492.robot.autonomous.MissionSendable;
@@ -21,15 +22,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-    static {
-        System.loadLibrary("pixy_java");
-    }
-
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
     EnhancedJoystick driverRight;
     Gamepad manipulator;
+
+    PixyCamera pixyCamera = new PixyCamera(CameraSettings.GREEN_SHOP);
 
     GearPiston gearPiston;
 
@@ -84,7 +83,7 @@ public class Robot extends IterativeRobot {
 
         CameraServer.getInstance().startAutomaticCapture();
 
-        commandFactory = new CommandFactory(driveBase, gearPiston, doors);
+        commandFactory = new CommandFactory(driveBase, gearPiston, doors, pixyCamera);
 
         Mission testEncoderVision = new Mission("test encoder vision");
         testEncoderVision.add(commandFactory.alignWithVision(30));
