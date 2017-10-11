@@ -3,6 +3,7 @@ package org.usfirst.frc.team1492.robot.autonomous.commands;
 import org.usfirst.frc.team1492.robot.Block;
 import org.usfirst.frc.team1492.robot.BlockArray;
 import org.usfirst.frc.team1492.robot.DriveBase;
+import org.usfirst.frc.team1492.robot.PixyCamera;
 import org.usfirst.frc.team1492.robot.pixy;
 import org.usfirst.frc.team1492.robot.autonomous.Command;
 
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TurnToTargetVisionCommand implements Command {
 
     private DriveBase driveBase;
+    private PixyCamera pixyCamera;
     private BlockArray blocks = new BlockArray(100);
     private boolean locked = false;
     private boolean aimed = false;
@@ -19,23 +21,12 @@ public class TurnToTargetVisionCommand implements Command {
     private Preferences preferences;
     private boolean testing;
 
-    public TurnToTargetVisionCommand(DriveBase driveBase, boolean testing) {
+    public TurnToTargetVisionCommand(DriveBase driveBase, PixyCamera pixyCamera, boolean testing) {
         this.testing = testing;
         this.driveBase = driveBase;
+        this.pixyCamera = pixyCamera;
 
         blocks = new BlockArray(100);
-        pixy.pixy_init();
-
-        pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
-        pixy.pixy_cam_set_auto_white_balance((short) 0);
-
-        // cam_setECV(64017)
-//      pixy.pixy_cam_set_exposure_compensation((short) 17, (short) 250);
-      // cam_setECV(25601) for the bright light rings
-      pixy.pixy_cam_set_exposure_compensation((short) 1, (short) 100);
-
-        // cam_setWBV(0x884040)
-        pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
 
         preferences = Preferences.getInstance();
         // preferences.putDouble("vision/gain", 0.7);
@@ -49,8 +40,8 @@ public class TurnToTargetVisionCommand implements Command {
 
     @Override
     public boolean run() {
-        if (pixy.pixy_blocks_are_new() == 1) {
-            int count = pixy.pixy_get_blocks(100, blocks);
+        if (pixyCamera.blocksAreNew()) {
+            int count = pixyCamera.getBlocks(100, blocks);
 
             SmartDashboard.putNumber("Number blocks", count);
 

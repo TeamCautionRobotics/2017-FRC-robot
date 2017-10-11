@@ -85,7 +85,7 @@ public class CommandFactory {
     }
 
     public Command turnToTarget(boolean testing) {
-        return new TurnToTargetVisionCommand(driveBase, testing);
+        return new TurnToTargetVisionCommand(driveBase, pixyCamera, testing);
     }
 
     public Command setGearPiston(boolean out) {
