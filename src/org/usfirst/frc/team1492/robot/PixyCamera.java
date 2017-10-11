@@ -2,53 +2,57 @@ package org.usfirst.frc.team1492.robot;
 
 import java.util.ArrayList;
 
-public class PixyCamera {
+public enum PixyCamera {
+    INSTANCE;
 
-    static {
+    private CameraSettings pixyCameraSettings;
+    private boolean pixyOpen = false;
+
+    private PixyCamera() {
+        // This would normally be in a static block, but is here because enum reasons.
         System.loadLibrary("pixy_java");
+
+        initPixy();
     }
 
-    private static boolean initialized = false;
-
-    enum CameraSettings {
-        ORANGE_LIGHT((short) 17, 250),      // Settings for orange light ring - cam_setECV(64017)
-        GREEN_COMPETITION((short) 1, 80),   // Settings for green light ring at AZPX 2017 - cam_setECV(20481)
-        GREEN_SHOP((short) 2, 150);         // Settings for green light ring in workshop - cam_setECV(38402)
-
-        final short gain;
-        final int compensation;
-
-        private CameraSettings(short gain, int compensation) {
-            this.gain = gain;
-            this.compensation = compensation;
+    public void initPixy() {
+        if (pixyOpen) {
+            pixy.pixy_close();
+            pixyOpen = false;
         }
-    }
 
-
-    public PixyCamera(CameraSettings cameraSettings) {
-        if (!initialized) {
-            if (pixy.pixy_init() != 0) {
-                System.err.println("Error initializing the pixy! #####");
-            }
-
-            pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
-            pixy.pixy_cam_set_auto_white_balance((short) 0);
-
-            // cam_setWBV(0x884040)
-            pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
-
-            setPixySettings(cameraSettings);
-            initialized = true;
+        int status = pixy.pixy_init();
+        if (status < 0) {
+            System.err.format("[PixyCamera] initPixy: pixy_init returned %d%n", status);
+            pixyOpen = false;
         } else {
-            System.err.println("Pixy already initialized.");
+            pixyOpen = true;
         }
+
+        pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
+        pixy.pixy_cam_set_auto_white_balance((short) 0);
+
+        // cam_setWBV(0x884040)
+        pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
+
+        setPixySettings(pixyCameraSettings);
     }
 
     public void setPixySettings(CameraSettings cameraSettings) {
-        pixy.pixy_cam_set_exposure_compensation(cameraSettings.gain, cameraSettings.compensation);
+        if (cameraSettings != null) {
+            pixy.pixy_cam_set_exposure_compensation(cameraSettings.gain, cameraSettings.compensation);
+            pixyCameraSettings = cameraSettings;
+        }
     }
 
     public boolean blocksAreNew() {
+        int status = pixy.pixy_cam_get_auto_exposure_compensation();
+
+        if (status < 0) {
+            System.err.format("[PixyCamera] blocksAreNew: getAEC status %d, reiniting Pixy.%n", status);
+            initPixy();
+        }
+
         return pixy.pixy_blocks_are_new() == 1;
     }
 
