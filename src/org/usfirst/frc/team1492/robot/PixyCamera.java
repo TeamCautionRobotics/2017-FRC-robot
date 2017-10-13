@@ -8,7 +8,6 @@ public enum PixyCamera {
 
     private CameraSettings pixyCameraSettings;
     private boolean pixyOpen = false;
-    private long pixyDisconnectedAt = 0;
 
     private PixyCamera() {
         // This would normally be in a static block, but is here because enum reasons.
@@ -28,7 +27,6 @@ public enum PixyCamera {
             pixyOpen = false;
         } else {
             System.err.format("[PixyCamera] initPixy: pixy_init successful at %d.%n", System.currentTimeMillis());
-            pixyOpen = true;
         }
 
         pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
@@ -38,6 +36,7 @@ public enum PixyCamera {
         pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
 
         setPixySettings(pixyCameraSettings);
+        pixyOpen = true;
     }
 
     public void closePixy() {
@@ -59,16 +58,15 @@ public enum PixyCamera {
             // Pixy is probably unavailable
             if (status < 0) {
                 closePixy();
-                pixyDisconnectedAt = System.currentTimeMillis();
                 System.err.format(
                         "[PixyCamera] blocksAreNew: getAEC status %d, at %d, reiniting Pixy.%n",
-                        status, pixyDisconnectedAt);
+                        status, System.currentTimeMillis());
 
-                // Make sure blocksAreNew is called in 20 milliseconds
+                // Make sure initPixy is called in 20 milliseconds
                 new java.util.Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        blocksAreNew();
+                        initPixy();
                     }
                 }, 20);
                 return false;
@@ -76,15 +74,8 @@ public enum PixyCamera {
                 // Only check for blocks if Pixy is confirmed to be connected
                 return pixy.pixy_blocks_are_new() == 1;
             }
-        } else {
-            // Try reinitializing Pixy after 20 milliseconds
-            if (pixyDisconnectedAt + 20 > System.currentTimeMillis()) {
-                System.err.format("[PixyCamera] blocksAreNew: initializing Pixy at %d.",
-                        System.currentTimeMillis());
-                initPixy();
-            }
-            return false;
         }
+        return false;
     }
 
     public int getBlocks(int maxCount, BlockArray blocks) {
