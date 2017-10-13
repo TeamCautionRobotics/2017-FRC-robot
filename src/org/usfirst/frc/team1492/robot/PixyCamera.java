@@ -97,8 +97,9 @@ public enum PixyCamera {
 
             targets.sort((Block o1, Block o2) -> Integer.compare(o1.getX(), o2.getX()));
 
+            System.out.println("[pixy-vision]");
             for (int i = 0; i < targets.size(); i++) {
-                System.out.print("[pixy-vision] target " + i + ", x is " + targets.get(i).getX() + " ");
+                System.out.format(" target %d, x is %d", i, targets.get(i).getX());
             }
             System.out.println("");
             return new Block[] {targets.get(0), targets.get(targets.size() - 1)};
