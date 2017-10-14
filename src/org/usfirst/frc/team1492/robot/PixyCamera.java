@@ -17,7 +17,12 @@ public enum PixyCamera {
     }
 
     public void initPixy() {
+        initPixy(false);
+    }
+
+    public void initPixy(boolean retry) {
         if (pixyOpen) {
+            System.err.format("[PixyCamera] initPixy: pixy is open, closing.");
             closePixy();
         }
 
@@ -25,18 +30,30 @@ public enum PixyCamera {
         if (status < 0) {
             System.err.format("[PixyCamera] initPixy: pixy_init returned %d%n", status);
             pixyOpen = false;
+
+            if (retry) {
+                System.err.format("[PixyCamera] initPixy: retry true, retrying at %d.%n",
+                        System.currentTimeMillis() + 50);
+                // Try again in 50 milliseconds
+                new java.util.Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        initPixy(true); // Keep retrying
+                    }
+                }, 50);
+            }
         } else {
             System.err.format("[PixyCamera] initPixy: pixy_init successful at %d.%n", System.currentTimeMillis());
+
+            pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
+            pixy.pixy_cam_set_auto_white_balance((short) 0);
+    
+            // cam_setWBV(0x884040)
+            pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
+    
+            setPixySettings(pixyCameraSettings);
+            pixyOpen = true;
         }
-
-        pixy.pixy_cam_set_auto_exposure_compensation((short) 0);
-        pixy.pixy_cam_set_auto_white_balance((short) 0);
-
-        // cam_setWBV(0x884040)
-        pixy.pixy_cam_set_white_balance_value((short) 64, (short) 64, (short) 136);
-
-        setPixySettings(pixyCameraSettings);
-        pixyOpen = true;
     }
 
     public void closePixy() {
@@ -66,7 +83,7 @@ public enum PixyCamera {
                 new java.util.Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        initPixy();
+                        initPixy(true); // Keep retrying if Pixy unavailable
                     }
                 }, 20);
                 return false;
