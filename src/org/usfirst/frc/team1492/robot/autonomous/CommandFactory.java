@@ -3,6 +3,7 @@ package org.usfirst.frc.team1492.robot.autonomous;
 import org.usfirst.frc.team1492.robot.Doors;
 import org.usfirst.frc.team1492.robot.DriveBase;
 import org.usfirst.frc.team1492.robot.GearPiston;
+import org.usfirst.frc.team1492.robot.PixyCamera;
 import org.usfirst.frc.team1492.robot.autonomous.commands.AlignWithVisionCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.DelayCommand;
 import org.usfirst.frc.team1492.robot.autonomous.commands.MoveStraightCommand;
@@ -17,11 +18,13 @@ public class CommandFactory {
     private DriveBase driveBase;
     private GearPiston gearPiston;
     private Doors doors;
+    private PixyCamera pixyCamera;
 
-    public CommandFactory(DriveBase driveBase, GearPiston gearPiston, Doors doors) {
+    public CommandFactory(DriveBase driveBase, GearPiston gearPiston, Doors doors, PixyCamera pixyCamera) {
         this.driveBase = driveBase;
         this.gearPiston = gearPiston;
         this.doors = doors;
+        this.pixyCamera = pixyCamera;
     }
 
     public Command moveStraight(double speed, double time) {
@@ -74,7 +77,7 @@ public class CommandFactory {
     }
 
     public Command alignWithVision(boolean testing, boolean encoderStop, double encoderStopDistance) {
-        return new AlignWithVisionCommand(driveBase, testing, encoderStop, encoderStopDistance);
+        return new AlignWithVisionCommand(driveBase, pixyCamera, testing, encoderStop, encoderStopDistance);
     }
 
     public Command turnToTarget() {
@@ -82,7 +85,7 @@ public class CommandFactory {
     }
 
     public Command turnToTarget(boolean testing) {
-        return new TurnToTargetVisionCommand(driveBase, testing);
+        return new TurnToTargetVisionCommand(driveBase, pixyCamera, testing);
     }
 
     public Command setGearPiston(boolean out) {

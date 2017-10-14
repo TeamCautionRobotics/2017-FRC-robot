@@ -21,15 +21,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-    static {
-        System.loadLibrary("pixy_java");
-    }
-
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
     EnhancedJoystick driverRight;
     Gamepad manipulator;
+
+    PixyCamera pixyCamera;
 
     GearPiston gearPiston;
 
@@ -84,7 +82,10 @@ public class Robot extends IterativeRobot {
 
         CameraServer.getInstance().startAutomaticCapture();
 
-        commandFactory = new CommandFactory(driveBase, gearPiston, doors);
+        pixyCamera = PixyCamera.INSTANCE;
+        pixyCamera.setPixySettings(CameraSettings.GREEN_SHOP);
+
+        commandFactory = new CommandFactory(driveBase, gearPiston, doors, pixyCamera);
 
         Mission testEncoderVision =
                 new Mission("test encoder vision", commandFactory.alignWithVision(30));
