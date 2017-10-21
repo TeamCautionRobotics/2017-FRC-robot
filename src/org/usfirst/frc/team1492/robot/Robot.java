@@ -83,7 +83,7 @@ public class Robot extends IterativeRobot {
         CameraServer.getInstance().startAutomaticCapture();
 
         pixyCamera = PixyCamera.INSTANCE;
-        pixyCamera.setPixySettings(CameraSettings.GREEN_SHOP);
+        pixyCamera.setPixySettings(CameraSettings.STATE_CHAMP);
 
         commandFactory = new CommandFactory(driveBase, gearPiston, doors, pixyCamera);
 
@@ -157,7 +157,7 @@ public class Robot extends IterativeRobot {
         Mission doNothing = new Mission("do nothing");
         missionChooser.addObject("Do nothing", doNothing);
 
-        Mission visionTest = new Mission("vision test", commandFactory.alignWithVision(true));
+        Mission visionTest = new Mission("vision test", true, commandFactory.alignWithVision(true));
         missionChooser.addObject("Vision Test", visionTest);
 
         deployGear = new Mission("deployGear", commandFactory.moveStraight(false, 0, 0),
