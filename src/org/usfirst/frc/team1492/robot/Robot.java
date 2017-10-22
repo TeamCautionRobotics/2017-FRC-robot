@@ -254,7 +254,14 @@ public class Robot extends IterativeRobot {
 
         // The joystick axes are intentionally reversed, so for the joystick the outfeed
         // is the front of the robot.
-        driveBase.drive(driverRight.getY() + driverLeft.getX(), driverRight.getY() - driverLeft.getX());
+        
+        double forwardCommand = driverRight.getY();
+        double turnCommand = driverLeft.getX();
+
+        // Reduce maximum turn rate. For Connor driving at the State Championship 
+        turnCommand *= 0.75;
+
+        driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
 
         if (driverLeft.getRawButton(2)) {
             driveHighGear = false;
