@@ -55,6 +55,9 @@ public class Robot extends IterativeRobot {
     boolean gearDeployButtonPressed = false;
     boolean gearDeployRunning = false;
 
+    final static String DRIVE_ONLY_MODE = "Drive Only Mode";
+    final static String TANK_DRIVE_MODE = "Tank drive mode";
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -171,6 +174,13 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("auto mission", missionChooser);
         missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
         SmartDashboard.putData(missionSendable);
+
+        if (!SmartDashboard.containsKey(DRIVE_ONLY_MODE)) {
+            SmartDashboard.putBoolean(DRIVE_ONLY_MODE, false);
+        }
+        if (!SmartDashboard.containsKey(TANK_DRIVE_MODE)) {
+            SmartDashboard.putBoolean(TANK_DRIVE_MODE, false);
+        }
     }
 
     /**
@@ -216,6 +226,10 @@ public class Robot extends IterativeRobot {
         driveBase.pidController.disable();
     }
 
+    public static double lowPowerLimiter(double power) {
+        return Math.max(Math.min(power, 2.0/3.0), -2.0/3.0);
+    }
+
     /**
      * This function is called periodically during operator control
      */
@@ -229,6 +243,27 @@ public class Robot extends IterativeRobot {
 
         if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
                 || driveBase.pidController.isEnabled()) {
+            return;
+        }
+
+        if (SmartDashboard.getBoolean(DRIVE_ONLY_MODE, false)) {
+            driveBase.useHighGear(true);
+
+            double forwardCommand = -driverRight.getY() * 2.0/3.0;
+            double turnCommand = driverLeft.getX() * 2.0/3.0;
+
+            double leftPower = (forwardCommand + turnCommand);
+            double rightPower = (forwardCommand - turnCommand);
+
+            if (SmartDashboard.getBoolean(TANK_DRIVE_MODE, false)) {
+                leftPower = -driverLeft.getY();
+                rightPower = -driverRight.getY();
+            }
+
+            leftPower = lowPowerLimiter(leftPower * 2.0 / 3.0);
+            rightPower = lowPowerLimiter(rightPower * 2.0 / 3.0);
+
+            driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
             return;
         }
 
