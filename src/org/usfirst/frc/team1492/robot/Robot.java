@@ -56,6 +56,7 @@ public class Robot extends IterativeRobot {
     boolean gearDeployRunning = false;
 
     final static String DRIVE_ONLY_MODE = "Drive Only Mode";
+    final static String TANK_DRIVE_MODE = "Tank drive mode";
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -177,6 +178,9 @@ public class Robot extends IterativeRobot {
         if (!SmartDashboard.containsKey(DRIVE_ONLY_MODE)) {
             SmartDashboard.putBoolean(DRIVE_ONLY_MODE, false);
         }
+        if (!SmartDashboard.containsKey(TANK_DRIVE_MODE)) {
+            SmartDashboard.putBoolean(TANK_DRIVE_MODE, false);
+        }
     }
 
     /**
@@ -250,6 +254,11 @@ public class Robot extends IterativeRobot {
 
             double leftPower = (forwardCommand + turnCommand);
             double rightPower = (forwardCommand - turnCommand);
+
+            if (SmartDashboard.getBoolean(TANK_DRIVE_MODE, false)) {
+                leftPower = -driverLeft.getY();
+                rightPower = -driverRight.getY();
+            }
 
             leftPower = lowPowerLimiter(leftPower * 2.0 / 3.0);
             rightPower = lowPowerLimiter(rightPower * 2.0 / 3.0);
